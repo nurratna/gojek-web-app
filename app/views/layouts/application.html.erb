@@ -18,18 +18,29 @@
         <%= link_to "gojek web app", '#', id: "logo" %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
-            <!-- session !nil -->
-            <!-- session is nil -->
             <li>
-              <%= link_to '#' do %>
-                <span class="glyphicon glyphicon-user"></span> Sign Up
+              <%= link_to home_index_path do %>
+                <span class="glyphicon glyphicon-home"></span> Home
               <% end %>
             </li>
-            <li>
-              <%= link_to '#' do %>
-                <span class="glyphicon glyphicon-log-in"></span> Sign In
-              <% end %>
-            </li>
+            <% if session[:user_id] %>
+              <li>
+                <%= link_to logout_path, method: :delete do %>
+                  <span class="glyphicon glyphicon-log-out"></span> Sign Out
+                <% end %>
+              </li>
+            <% else %>
+              <li>
+                <%= link_to new_user_path do %>
+                  <span class="glyphicon glyphicon-user"></span> Sign Up
+                <% end %>
+              </li>
+              <li>
+                <%= link_to login_path do %>
+                  <span class="glyphicon glyphicon-log-in"></span> Sign In
+                <% end %>
+              </li>
+            <% end %>
           </ul>
         </nav>
       </div>
