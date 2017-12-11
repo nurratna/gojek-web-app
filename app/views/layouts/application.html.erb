@@ -13,21 +13,29 @@
   </head>
 
   <body>
-    <body>
     <header class="navbar navbar-fixed-top navbar-inverse">
       <div class="container">
-        <%= link_to "GOJEK WEB APP", '#', id: "logo" %>
+        <%= link_to "gojek web app", '#', id: "logo" %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
-            <li><%= link_to "Home",   '#' %></li>
-            <li><%= link_to "About",   '#' %></li>
-            <li><%= link_to "Log in", '#' %></li>
+            <!-- session !nil -->
+            <!-- session is nil -->
+            <li>
+              <%= link_to '#' do %>
+                <span class="glyphicon glyphicon-user"></span> Sign Up
+              <% end %>
+            </li>
+            <li>
+              <%= link_to '#' do %>
+                <span class="glyphicon glyphicon-log-in"></span> Sign In
+              <% end %>
+            </li>
           </ul>
         </nav>
       </div>
     </header>
 
-    <div class="container">
+    <div class="containers">
       <%= yield %>
     </div>
 

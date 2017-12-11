@@ -1,12 +1,25 @@
+<!-- $(".owl-carousel").owlCarousel(); -->
 <div class="center jumbotron">
-  <h1>Welcome to the Sample App</h1>
+  <h1>Welcome to the Go-JEK</h1>
 
   <h2>
-    This is the home page for the
-    <a href="http://www.railstutorial.org/">Ruby on Rails Tutorial</a>
-    sample application.
+    <a href="https://www.go-jek.com/">Everything You Need in One App</a>
   </h2>
+  <%= image_tag 'logo.png', alt: "Simplified Go Food" %>
 
-  <%= link_to "Sign in", '#', class: "btn btn-lg btn-primary" %>
-  <%= link_to "Sign up", '#', class: "btn btn-lg btn-primary" %>
+
+  <div class="owl-carousel">
+    <div class="item"><h1>1</h1></div>
+    <div class="item"><h1>2</h1></div>
+    <div class="item"><h1>3</h1></div>
+    <div class="item"><h1>4</h1></div>
+    <div class="item"><h1>5</h1></div>
+    <div class="item"><h1>6</h1></div>
+  </div>
 </div>
+
+<script>
+  $(document).ready(function()){
+     $(".owl-carousel").owlCarousel();
+  }
+</script>

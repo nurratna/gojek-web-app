@@ -8,7 +8,7 @@ $gray-medium-light: #eaeaea;
 /* universal */
 
 body {
-  padding-top: 60px;
+  // padding-top: 60px;
 }
 
 section {
@@ -53,17 +53,15 @@ p {
   line-height: 1.7em;
 }
 
-
 /* header */
-
-#logo {
+header #logo {
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
   color: white;
   text-transform: uppercase;
   letter-spacing: -1px;
-  padding-top: 9px;
+  padding-top: 10px;
   font-weight: bold;
   &:hover {
     color: white;
@@ -71,18 +69,31 @@ p {
   }
 }
 
+/* container */
+
+.containers {
+	grid-area: body;
+  margin: 2em;
+  padding: 4em 1em;
+  // display: grid;
+  // grid-template-columns: 25% auto;
+  // grid-column-gap: 20px;
+  // padding: 4em 1em;
+}
+
 /* footer */
 
 footer {
   border-top: 3px solid $gray-medium-light;
   color: $gray-light;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   // margin:
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
+  background: white;
 
   p {
     text-align: center;
