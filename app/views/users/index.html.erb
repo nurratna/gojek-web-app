@@ -1,2 +1,35 @@
 <h1>Users#index</h1>
 <p>Find me in app/views/users/index.html.erb</p>
+
+<p id="notice"><%= notice %></p>
+
+<h1>Users</h1>
+
+<table class="table-striped">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Roles</th>
+      <th>Gopay Credit</th>
+    </tr>
+  </thead>
+  <% @users.each do |user| %>
+    <tr class="<%= cycle('list_line_odd', 'list_line_even') %>">
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= number_to_currency(user.gopay, unit: 'Rp. ', delimiter: '.', separator: ',') %></td>
+      <td>
+        <%= link_to 'Show', user %>
+        <%= link_to 'Edit', edit_user_path(user) %>
+        <%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %>
+      </td>
+      <td>
+        <%= link_to 'Top up', topup_user_path(user) %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<br/>
+
+<%= link_to 'New User', new_user_path %>
