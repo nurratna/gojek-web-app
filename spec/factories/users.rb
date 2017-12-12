@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :user do
     name { Faker::Internet.user_name }
     email { Faker::Internet.email }
-    phone "085277206511"
+    phone { Faker::Number.number(12) }
     password "longpassword"
     password_confirmation "longpassword"
     gopay 0

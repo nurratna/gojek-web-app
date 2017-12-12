@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
   skip_before_action :authorize, only: [:new, :create]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
   # GET /users
   def index
@@ -11,12 +11,12 @@ class UsersController < ApplicationController
   def show
   end
 
-  # GET users/1/edit
+  # GET users/new
   def new
     @user = User.new
   end
 
-  # GET /users/new
+  # GET /users/edit
   def edit
   end
 
@@ -41,9 +41,6 @@ class UsersController < ApplicationController
       if @user.update(user_params)
         format.html { redirect_to users_url, notice: 'User was successfully updated.'}
         format.json { render :show, status: :ok, location: @user }
-
-        # @users = User.all
-        # ActionCable.server.broadcast 'users', html: render_to_string('store/index', layout: false)
       else
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
@@ -57,6 +54,23 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url, notice: "User was successfully destroy" }
       format.json { head :no_content }
+    end
+  end
+
+  # GET /user/1/topup
+  def topup
+  end
+
+  # PATCH /users/1/topup
+  def save_topup
+    respond_to do |format|
+      if @user.topup(params[:topup_gopay])
+        format.html { redirect_to users_url, notice: "Go Pay was successfully updated" }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :topup }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -35,11 +35,23 @@ RSpec.describe User, type: :model do
     expect(user2.errors[:email]).to include("has already been taken")
   end
 
-  it "is invalid with duplicate phone" do
+  it "is invalid with duplicate phone number" do
     user1 = create(:user, phone: "085277206511")
     user2 = build(:user, phone: "085277206511")
     user2.valid?
     expect(user2.errors[:phone]).to include("has already been taken")
+  end
+
+  it 'is invalid with phone number not numeric' do
+    user = build(:user, phone: '09-4748')
+    user.valid?
+    expect(user.errors[:phone]).to include('is not a number')
+  end
+
+  it 'is invalid with phone number length > 12' do
+    user = build(:user, phone: '085277206511212')
+    user.valid?
+    expect(user.errors[:phone]).to include('is too long (maximum is 12 characters)')
   end
 
   context "on a new user" do

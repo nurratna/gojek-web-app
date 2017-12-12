@@ -64,7 +64,7 @@ header #logo {
   padding-top: 10px;
   font-weight: bold;
   &:hover {
-    color: #48af4a;
+    color: #8BC93B;
     text-decoration: none;
   }
 }
@@ -79,6 +79,15 @@ header #logo {
   // grid-template-columns: 25% auto;
   // grid-column-gap: 20px;
   // padding: 4em 1em;
+}
+
+a {
+  color: black;
+  font-size: 15px;
+  &:hover {
+    color: #8BC93B;
+    text-decoration: none;
+  }
 }
 
 /* footer */

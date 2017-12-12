@@ -1,6 +1,6 @@
 <div class="go_food_form">
   <% if flash[:alert] %>
-    <p id="notice"><%= flash[:alert] %></p>
+    <p id="notice" class="text-danger"><%= flash[:alert] %></p>
   <% end %>
 
   <%= form_tag do %>

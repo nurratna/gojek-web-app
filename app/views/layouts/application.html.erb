@@ -47,7 +47,40 @@
     </header>
 
     <div class="containers">
-      <%= yield %>
+      <% if session[:user_id] %>
+      <div class="row">
+        <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
+          <nav>
+            <ul class="nav">
+              <li>
+                <%= link_to '#' do %>
+                  <span class="glyphicon glyphicon-user"></span> Profile
+                <% end %>
+              </li>
+              <li>
+                <%= link_to '#' do %>
+                  <span class="glyphicon glyphicon-lock"></span> Topup Gopay
+                <% end %>
+              </li>
+              <li>
+                <%= link_to '#' do %>
+                  <span class="glyphicon glyphicon-list-alt"></span> Order Now
+                <% end %>
+              </li>
+              <li>
+                <%= link_to '#' do %>
+                  <span class="glyphicon glyphicon-list-alt"></span> Order History
+                <% end %>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="col-sm-1" style="background-color:solid;"></div>
+        <div class="col-sm-8" style="background-color:#eeeeee;"><%= yield %></div>
+      </div>
+      <% else %>
+        <%= yield %>
+      <% end %>
     </div>
 
     <footer class="footer">

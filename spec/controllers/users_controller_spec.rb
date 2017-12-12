@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
+  before :each do
+    @user = create(:user)
+    session[:user_id] = @user.id
+  end
 
   describe "GET #index" do
     it "returns http success" do
@@ -19,7 +23,6 @@ RSpec.describe UsersController, type: :controller do
       user = create(:user)
       get :show, params: { id: user }
       expect(assigns(:user)).to eq(user)
-      # expect(user).to eq(true)
     end
 
     it 'renders the :show template' do
@@ -126,4 +129,51 @@ RSpec.describe UsersController, type: :controller do
     end
   end
 
+  describe 'GET #topup' do
+    before :each do
+      @user = create(:user)
+    end
+
+    it 'assigns the requested to user' do
+      get :topup, params: { id: @user}
+      expect(assigns(:user)).to eq(@user)
+    end
+
+    it "renders the :topup template" do
+      get :topup, params: { id: @user }
+      expect(response).to render_template(:topup)
+    end
+  end
+
+  describe "PATCH #save_topup" do
+    before :each do
+      @user = create(:user, gopay: 50000)
+    end
+
+    context "with valid attribut" do
+      it "adds topup amount to user's gopay in the database" do
+        patch :save_topup, params: { id: @user, user: attributes_for(:user), topup_gopay: 150000 }
+        @user.reload
+        expect(@user.gopay). to eq(200000)
+      end
+
+      it "redirect to the user" do
+        patch :save_topup, params: { id: @user, user: attributes_for(:user), topup_gopay: 150000 }
+        expect(response).to redirect_to(users_path)
+      end
+    end
+
+    context "with invalid attribut" do
+      it "does not change topup amount to user's gopay in the database" do
+        patch:save_topup, params: { id: @user, user: attributes_for(:user), topup_gopay: -50000 }
+        @user.reload
+        expect(@user.gopay).not_to eq(0)
+      end
+
+      it "re-renders :topup template" do
+        patch :save_topup, params: { id: @user, user: attributes_for(:user), topup_gopay: -50000 }
+        expect(response).to render_template(:topup)
+      end
+    end
+  end
 end
