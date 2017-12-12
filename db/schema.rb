@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20171212063357) do
     t.string "destination"
     t.integer "service_type"
     t.integer "payment_type"
-    t.decimal "price"
+    t.decimal "est_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
