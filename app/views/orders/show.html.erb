@@ -1,0 +1,35 @@
+<header><h1 class="display-4">Order</h1></header>
+<p id="notice"><%= notice %></p>
+<table>
+  <tr>
+    <th>Order ID:</th>
+    <td><%= @order.id %></td>
+  </tr>
+
+  <tr>
+    <th>Origin:</strong></th>
+    <td><%= @order.origin %></td>
+  </tr>
+
+  <tr>
+    <th>Destination:</strong></th>
+    <td><%= @order.destination %></td>
+  </tr>
+
+  <tr>
+    <th>Service Type:</strong></th>
+    <td><%= @order.service_type %></td>
+  </tr>
+
+  <tr>
+    <th>Payment Type:</strong></th>
+    <td><%= @order.payment_type %></td>
+  </tr>
+
+  <tr>
+    <th>Total Price:</strong></th>
+    <td><%= number_to_currency(@order.price, unit: 'Rp ', delimiter: '.', separator: ',') %></td>
+  </tr>
+</table>
+
+<div><%= link_to 'Back', orders_path %></div>
