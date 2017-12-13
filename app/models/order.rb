@@ -22,7 +22,8 @@ class Order < ApplicationRecord
   before_validation :geocode, if: ->(obj){ obj.origin.present? and obj.origin_changed? }
   before_validation :geocode, if: ->(obj){ obj.destination.present? and obj.destination_changed? }
   validate :geocode_endpoints
-  # before_validation :geocode_endpoints_destination
+  # before_validation :geocode_endpoints
+  after_validation :set_calculated_attributes
 
   validates :origin, presence: true
   validate :ensure_origin_latlong_found
@@ -31,12 +32,65 @@ class Order < ApplicationRecord
   validates :service_type, :payment_type, presence: true
   validates :service_type, inclusion: service_types.keys
   validates :payment_type, inclusion: payment_types.keys
-  # validates :origin_lat, :origin_long, presence: true
 
-  # validate :ensure_origin_latlong_found
-  # validate :ensure_destination_latlong_found
+  validate :ensure_origin_different_with_destination
+  validate :ensure_credit_sufficient_if_using_gopay
+  before_save :substracts_credit_if_using_gopay
+
+  def cost_goride_per_km
+    1500
+  end
+
+  def cost_gocar_per_km
+    2500
+  end
+
+  def max_dist
+    25
+  end
+
+  def calculate_distance
+   dist = 0
+   if geocoder_attributes_exist?
+    coor_origin = Geocoder.coordinates(origin)
+    coor_destination = Geocoder.coordinates(destination)
+    dist = Geocoder::Calculations.distance_between(coor_origin, coor_destination).round(2)
+   end
+   dist
+ end
+
+ def calculate_est_price
+   est_price = 0
+   if service_type == 'Go Ride'
+     est_price = (calculate_distance * cost_goride_per_km).round
+     est_price = cost_goride_per_km if est_price < cost_goride_per_km
+   else
+     est_price = (calculate_distance * cost_gocar_per_km).round
+     est_price = cost_gocar_per_km if est_price < cost_gocar_per_km
+   end
+   est_price
+ end
 
   private
+    def set_calculated_attributes
+      self.est_price = calculate_est_price
+    end
+
+    def ensure_credit_sufficient_if_using_gopay
+      if payment_type == 'Go Pay'
+        if user.gopay < calculate_est_price
+          errors.add(:payment_type, ': insufficient Go Pay credit')
+        end
+      end
+    end
+
+    def substracts_credit_if_using_gopay
+      if payment_type == 'Go Pay'
+        user.gopay -= est_price
+        user.save
+      end
+    end
+
     def geocode_endpoints
       if origin_changed?
         geocoded = Geocoder.search(origin).first
@@ -69,7 +123,13 @@ class Order < ApplicationRecord
       end
     end
 
-    # def geocoder_attributes_exist?
-    #   !origin_lat.blank? && !origin_long.blank? && !destination_lat.blank? && !destination_long.blank?
-    # end
+    def ensure_origin_different_with_destination
+      if origin == destination
+        errors.add(:destination, "must be different with Origin")
+      end
+    end
+
+    def geocoder_attributes_exist?
+      !origin_lat.nil? && !origin_long.nil? && !destination_lat.nil? && !destination_long.nil?
+    end
 end

@@ -70,3 +70,4 @@ end
 gem 'bootstrap-sass', '3.3.7'
 gem 'owlcarousel-rails'
 gem 'geocoder'
+gem 'shoulda-matchers'

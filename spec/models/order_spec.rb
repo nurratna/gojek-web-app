@@ -49,13 +49,18 @@ RSpec.describe Order, type: :model do
       order.save
       expect(order.origin_lat).not_to eq(nil)
     end
+
+    it 'does not save if origin and destination have the same place' do
+      order = build(:order, origin: 'kemang', destination: 'kemang')
+      order.valid?
+      expect(order.errors[:destination]).to include('must be different with Origin')
+    end
   end
 
   context 'with origin lat-long not found' do
     it 'is invalid if lat-long not found' do
       order = build(:order, origin: "asdfxzcxc")
       order.valid?
-      # expect(order).to eq(nil)
       expect(order.errors[:origin]).to include("not found")
     end
   end
@@ -76,4 +81,44 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe 'relations' do
+    it { should belong_to(:user) }
+  end
+
+  describe 'paying with gopay' do
+    context "with sufficient gopay credit" do
+      before :each do
+        @user = create(:user, gopay: 150000)
+        @order = build(:order, payment_type: 'Go Pay')
+        @order.user = @user
+      end
+
+      it 'is valid with sufficient gopay credit' do
+        expect(@order).to be_valid
+      end
+
+      it 'substracts user gopay credit with est_price' do
+        @order.save
+        expect(@user.gopay).to eq(150000 - @order.est_price)
+      end
+    end
+
+    context 'with insufficient gopay credit' do
+      before :each do
+        @user = create(:user, gopay: 1000)
+        @order = build(:order, payment_type: 'Go Pay')
+        @order.user = @user
+        @order.est_price = @order.calculate_est_price
+      end
+
+      it 'is invalid with insufficient gopay credit' do
+        @order.valid?
+        expect(@order.errors[:payment_type]).to include(": insufficient Go Pay credit")
+      end
+
+      it 'does not substracts user gopay' do
+        expect(@order.user.gopay).not_to eq(0)
+      end
+    end
+  end
 end
