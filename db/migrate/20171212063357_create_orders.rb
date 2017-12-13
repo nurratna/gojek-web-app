@@ -5,6 +5,7 @@ class CreateOrders < ActiveRecord::Migration[5.1]
       t.string :destination
       t.integer :service_type
       t.integer :payment_type
+      t.integer :status
       t.decimal :est_price
 
       t.timestamps

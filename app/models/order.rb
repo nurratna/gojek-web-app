@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  belongs_to :user
+
   enum service_type: {
     "Go Ride" => 0,
     "Go Car" => 1,
@@ -7,6 +9,12 @@ class Order < ApplicationRecord
   enum payment_type: {
     "Cash" => 0,
     "Go Pay" => 1,
+  }
+
+  enum status: {
+    "On Proggress" => 0,
+    "Complete" => 1,
+    "Cancel" => 2,
   }
 
   validates :origin, :destination, :service_type, :payment_type, presence: true
