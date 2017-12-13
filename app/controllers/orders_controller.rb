@@ -17,7 +17,7 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.new(order_params)
-    # @order.user = User.find(session[:user_id])
+    @order.user = User.find(session[:user_id])
 
     respond_to do |format|
       if @order.save

@@ -2,11 +2,13 @@
 
 FactoryGirl.define do
   factory :order do
-    origin "kemang"
+    origin "Tanah Abang, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta"
     destination "Pasaraya Blok M, Melawai, South Jakarta City, Jakarta"
     service_type "Go Car"
     payment_type "Cash"
-    # price "9.99"
+    status "Completed"
+    est_price 7000
+    association :user
   end
 
   factory :invalid_order,parent: :order do
