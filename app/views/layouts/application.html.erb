@@ -30,15 +30,23 @@
                 <% end %>
               </li>
             <% else %>
-              <li>
-                <%= link_to new_user_path do %>
+              <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">
                   <span class="glyphicon glyphicon-user"></span> Sign Up
-                <% end %>
+                </a>
+                <div class="dropdown-content">
+                  <%= link_to 'User', new_user_path%>
+                  <%= link_to 'Driver', new_driver_path%>
+                </div>
               </li>
-              <li>
-                <%= link_to login_path do %>
+              <li class="dropdown">
+                <a href="javascript:void(0)" class="dropbtn">
                   <span class="glyphicon glyphicon-log-in"></span> Sign In
-                <% end %>
+                </a>
+                <div class="dropdown-content">
+                  <%= link_to 'User', login_path%>
+                  <%= link_to 'Driver', login_path%>
+                </div>
               </li>
             <% end %>
           </ul>
@@ -52,7 +60,7 @@
         <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
           <nav>
             <ul class="nav">
-              <li>
+              <li class="submenu">
                 <%= link_to '#' do %>
                   <span class="glyphicon glyphicon-user"></span> Profile
                 <% end %>
@@ -84,7 +92,8 @@
     </div>
 
     <footer class="footer">
-      <p>Go Scholar &copy; 2017</p>
+      <!-- 2014 © Metronic by keenthemes. Purchase Metronic! -->
+      <p>2017 © Go Scholar Tech Ruby On Rails</p>
     </footer>
   </body>
 </html>
