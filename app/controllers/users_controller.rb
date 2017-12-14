@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  # before_filter :authenticate
   skip_before_action :authorize, only: [:new, :create]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
@@ -26,6 +27,8 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        @user.token
+        @user.regenerate_token
         format.html { redirect_to users_url, notice: 'User was successfully created.'}
         format.json { render :show, status: :created, location: @user }
       else
@@ -81,5 +84,12 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :phone, :password, :passsword_confirmation)
+    end
+
+    def authenticate
+      authenticate_or_request_with_http_basic do |source_app, api_key|
+        client = Client.find_by_source_app(source_app)
+        client && client.api_key == api_key
+      end
     end
 end
