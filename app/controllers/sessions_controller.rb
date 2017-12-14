@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:email])
     if user.try(:authenticate, params[:password])
       session[:user_id] = user.id
-      redirect_to users_url
+      redirect_to user_path, method: :get
       # if user.roles.find_by(name: 'administrator')
       #   redirect_to admin_url
       # else
