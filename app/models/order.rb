@@ -23,7 +23,7 @@ class Order < ApplicationRecord
   before_validation :geocode, if: ->(obj){ obj.destination.present? and obj.destination_changed? }
   validate :geocode_endpoints
   # before_validation :geocode_endpoints
-  after_validation :set_calculated_attributes
+  after_validation :set_attributes
 
   validates :origin, presence: true
   validate :ensure_origin_latlong_found
@@ -72,8 +72,10 @@ class Order < ApplicationRecord
  end
 
   private
-    def set_calculated_attributes
+    def set_attributes
       self.est_price = calculate_est_price
+      # self.status 0
+
     end
 
     def ensure_credit_sufficient_if_using_gopay
