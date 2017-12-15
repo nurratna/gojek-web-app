@@ -35,6 +35,12 @@ RSpec.describe User, type: :model do
     expect(user2.errors[:email]).to include("has already been taken")
   end
 
+  it "is invalid with an email other than given format" do
+    user = build(:user, email: "nurgmail.com")
+    user.valid?
+    expect(user.errors[:email]).to include("format is invalid")
+  end
+
   it "is invalid with duplicate phone number" do
     user1 = create(:user, phone: "085277206511")
     user2 = build(:user, phone: "085277206511")

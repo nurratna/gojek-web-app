@@ -1,6 +1,6 @@
 <div class="go_food_form">
   <% if flash[:alert] %>
-    <p id="notice" class="text-danger"><%= flash[:alert] %></p>
+    <p class="bg-danger" style="padding:5px"><%= flash[:alert] %></p>
   <% end %>
 
   <%= form_tag do %>
@@ -15,6 +15,12 @@
       <div>
         <%= label_tag :password, 'Password:' %>
         <%= password_field_tag :password, params[:password] %>
+      </div>
+
+      <div>
+        <%= label_tag :role, 'Role:' %>
+        <%= radio_button_tag :role, 'user' %>User
+        <%= radio_button_tag :role, 'driver' %>Driver
       </div>
 
       <div>

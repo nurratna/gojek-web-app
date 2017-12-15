@@ -1,26 +1,34 @@
 class SessionsController < ApplicationController
-  skip_before_action :authorize
+  skip_before_action :authorize_user
+  # skip_before_action :authorize_driver
 
   def new
   end
 
   def create
     user = User.find_by(email: params[:email])
-    if user.try(:authenticate, params[:password])
-      session[:user_id] = user.id
-      redirect_to users_path
-      # if user.roles.find_by(name: 'administrator')
-      #   redirect_to admin_url
-      # else
-      #   redirect_to store_index_url
-      # end
+    driver = Driver.find_by(email: params[:email])
+
+    if params[:role] == 'user' && user.try(:authenticate, params[:password])
+      login_user user
+      redirect_to user
+    elsif params[:role] == 'driver' && @driver.try(:authenticate, params[:password])
+      login_driver driver
+      redirect_to driver
+    elsif params[:role].blank?
+      redirect_to login_url, alert: "Invalid Log In, Choose one of the role"
     else
-      redirect_to login_url, alert: 'Invalid email/password combination'
+      redirect_to login_url, alert: "Invalid email/password combination"
     end
   end
 
   def destroy
-    session[:user_id] = nil
-    redirect_to home_index_url, notice: 'Logged out'
+    if session[:user_id]
+      logout_user
+      redirect_to home_index_url, notice: 'Logged out'
+    else
+      logout_driver
+      redirect_to home_index_url, notice: 'Logged out'
+    end
   end
 end

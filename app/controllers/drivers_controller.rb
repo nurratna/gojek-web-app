@@ -1,6 +1,6 @@
 class DriversController < ApplicationController
   before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
-  skip_before_action :authorize
+  skip_before_action :authorize_user
 
   # GET /drivers
   # GET /drivers.json

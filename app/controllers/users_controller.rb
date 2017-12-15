@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # before_filter :authenticate
-  skip_before_action :authorize, only: [:new, :create]
+  skip_before_action :authorize_user, only: [:new, :create]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
   # GET /users
@@ -29,7 +29,8 @@ class UsersController < ApplicationController
       if @user.save
         @user.token
         @user.regenerate_token
-        format.html { redirect_to users_url, notice: 'User was successfully created.'}
+        login_user @user
+        format.html { redirect_to @user, notice: "Welcome #{@user.name.upcase}. Your account was successfully created."}
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new }
@@ -42,7 +43,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if @user.update(user_params)
-        format.html { redirect_to users_url, notice: 'User was successfully updated.'}
+        format.html { redirect_to @user, notice: 'User was successfully updated.'}
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit }

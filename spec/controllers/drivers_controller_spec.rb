@@ -123,7 +123,7 @@ RSpec.describe DriversController, type: :controller do
 
       it "redirects to drivers#index" do
         patch :update, params: { id: @driver, driver: attributes_for(:driver) }
-        expect(response).to redirect_to drivers_url
+        expect(response).to redirect_to @driver
       end
 
       it "disables login with old password" do

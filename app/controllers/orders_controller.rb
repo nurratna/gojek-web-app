@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :destroy]
+  # skip_before_action
 
   def index
     @orders = Order.all

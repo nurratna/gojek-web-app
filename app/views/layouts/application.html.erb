@@ -23,13 +23,18 @@
                 <span class="glyphicon glyphicon-home"></span> Home
               <% end %>
             </li>
-            <% if session[:user_id] %>
+            <% if session[:user_id] || session[:driver_id]%>
               <li>
                 <%= link_to logout_path, method: :delete do %>
                   <span class="glyphicon glyphicon-log-out"></span> Sign Out
                 <% end %>
               </li>
             <% else %>
+              <li>
+                <%= link_to login_path do %>
+                  <span class="glyphicon glyphicon-log-in"></span> Sign In
+                <% end %>
+              </li>
               <li class="dropdown">
                 <a href="javascript:void(0)" class="dropbtn">
                   <span class="glyphicon glyphicon-user"></span> Sign Up
@@ -39,15 +44,6 @@
                   <%= link_to 'Driver', new_driver_path%>
                 </div>
               </li>
-              <li class="dropdown">
-                <a href="javascript:void(0)" class="dropbtn">
-                  <span class="glyphicon glyphicon-log-in"></span> Sign In
-                </a>
-                <div class="dropdown-content">
-                  <%= link_to 'User', login_path%>
-                  <%= link_to 'Driver', login_path%>
-                </div>
-              </li>
             <% end %>
           </ul>
         </nav>
@@ -55,6 +51,9 @@
     </header>
 
     <div class="containers">
+      <% if notice %>
+        <p class="bg-success" style="padding:5px"><%= notice %></p>
+      <% end %>
       <% if session[:user_id] %>
       <div class="row">
         <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">

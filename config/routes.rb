@@ -22,6 +22,6 @@ Rails.application.routes.draw do
     delete 'logout' => :destroy
   end
 
-  resources :orders
+  resources :orders#, only: [:index, :show, :new, :create]
 
 end

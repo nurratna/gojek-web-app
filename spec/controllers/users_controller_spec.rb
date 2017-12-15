@@ -66,9 +66,9 @@ RSpec.describe UsersController, type: :controller do
         }.to change(User, :count).by(1)
       end
 
-      it "redirects to users#index" do
+      it "redirects to user#show" do
         post :create, params: { user: attributes_for(:user) }
-        expect(response).to redirect_to users_url
+        expect(response).to redirect_to assigns[:user]
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.describe UsersController, type: :controller do
 
       it "redirects to users#index" do
         patch :update, params: { id: @user, user: attributes_for(:user) }
-        expect(response).to redirect_to users_url
+        expect(response).to redirect_to @user
       end
 
       it "disables login with old password" do
