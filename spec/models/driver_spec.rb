@@ -134,4 +134,18 @@ RSpec.describe Driver, type: :model do
       expect(driver.errors[:gopay]).to include('must be greater than or equal to 0')
     end
   end
+
+  context "with location" do
+    it "is invalid without locatiion" do
+      location = build(:driver, location: nil)
+      location.valid?
+      expect(location.errors[:location]).to include("can't be blank")
+    end
+
+    it 'is invalid if lat-long not found' do
+      location = build(:driver, location: "asdfxacxc")
+      location.valid?
+      expect(location.errors[:location]).to include("not found")
+    end
+  end
 end

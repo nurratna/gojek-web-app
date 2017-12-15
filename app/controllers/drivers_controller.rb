@@ -1,5 +1,5 @@
 class DriversController < ApplicationController
-  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
+  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :change_location]
   skip_before_action :authorize_user
 
   # GET /drivers
@@ -62,11 +62,11 @@ class DriversController < ApplicationController
     end
   end
 
-  # GET /user/1/topup
+  # GET /driver/1/topup
   def topup
   end
 
-  # PATCH /users/1/topup
+  # PATCH /drivers/1/topup
   def save_topup
     respond_to do |format|
       if @driver.topup(params[:topup_gopay])
@@ -74,6 +74,23 @@ class DriversController < ApplicationController
         format.json { render :show, status: :ok, location: @driver }
       else
         format.html { render :topup }
+        format.json { render json: @driver.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # GET /driver/1/location
+  def location
+  end
+
+  # PATCH /drivers/1/location
+  def change_location
+    respond_to do |format|
+      if @driver.loc(params[:location])
+        format.html { redirect_to drivers_url, notice: "Location was successfully updated" }
+        format.json { render :show, status: :ok, location: @driver }
+      else
+        format.html { render :location }
         format.json { render json: @driver.errors, status: :unprocessable_entity }
       end
     end
@@ -87,6 +104,6 @@ class DriversController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def driver_params
-      params.require(:driver).permit(:name, :email, :phone, :password, :password_confirmation)
+      params.require(:driver).permit(:name, :email, :phone, :location,   :password, :password_confirmation)
     end
 end

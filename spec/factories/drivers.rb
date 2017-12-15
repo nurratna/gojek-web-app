@@ -8,6 +8,7 @@ FactoryGirl.define do
     password "longpassword"
     password_confirmation "longpassword"
     gopay 0
+    location 'Pasaraya Blok M, Melawai, South Jakarta City, Jakarta'
   end
 
   factory :invalid_driver, parent: :driver do
@@ -17,5 +18,6 @@ FactoryGirl.define do
     password nil
     password_confirmation nil
     gopay nil
+    location nil
   end
 end

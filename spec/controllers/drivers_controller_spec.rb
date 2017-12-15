@@ -194,4 +194,52 @@ RSpec.describe DriversController, type: :controller do
       end
     end
   end
+
+  describe 'GET #location' do
+    before :each do
+      @driver = create(:driver)
+    end
+
+    it 'assigns the requested to driver' do
+      get :location, params: { id: @driver }
+      expect(assigns(:driver)).to eq(@driver)
+    end
+
+    it "renders the :topup template" do
+      get :location, params: { id: @driver }
+      expect(response).to render_template(:location)
+    end
+  end
+
+  describe "PATCH #change_location" do
+    before :each do
+      @driver = create(:driver, location: 'tanah abang')
+    end
+
+    context "with valid attribut" do
+      it "adds location to driver's location in the database" do
+        patch :change_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
+        @driver.reload
+        expect(@driver.location). to eq('kemang')
+      end
+
+      it "redirect to the driver" do
+        patch :change_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
+        expect(response).to redirect_to(drivers_path)
+      end
+    end
+
+    context "with invalid attribut" do
+      it "does not change location to driver's location in the database" do
+        patch:change_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
+        @driver.reload
+        expect(@driver.location).not_to eq('kemang')
+      end
+
+      it "re-renders :location template" do
+        patch :change_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
+        expect(response).to render_template(:location)
+      end
+    end
+  end
 end

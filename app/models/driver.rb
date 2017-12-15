@@ -1,5 +1,8 @@
 class Driver < ApplicationRecord
   has_secure_password
+  geocoded_by :location
+  before_validation :geocode, if: ->(obj){ obj.location.present? and obj.location_changed? }
+  after_validation :geocode
 
   before_save { email.downcase! }
   validates :name, presence: true
@@ -8,6 +11,10 @@ class Driver < ApplicationRecord
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 8 }, allow_blank: true
   validates :gopay, numericality: { greater_than_or_equal_to: 0 }
+  validates :location, presence: true
+
+  validate :geocode_or_reset_coordinates
+  validate :ensure_location_latlong_found
 
   def topup(amount)
     if !(is_numeric?(amount))
@@ -21,8 +28,26 @@ class Driver < ApplicationRecord
     end
   end
 
+  def loc(params)
+    update(location: params)
+  end
+
   private
     def is_numeric?(obj)
       obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+    end
+
+    def ensure_location_latlong_found
+      if latitude.nil? || longitude.nil?
+        errors.add(:location, "not found")
+        false
+      end
+    end
+
+    def geocode_or_reset_coordinates
+      if geocode.nil?
+        self.latitude = nil
+        self.longitude = nil
+      end
     end
 end

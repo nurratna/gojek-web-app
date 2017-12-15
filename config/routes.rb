@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     member do
       get 'topup'
       patch 'topup' => :save_topup
+      get 'location'
+      patch 'location' => :change_location
     end
   end
 
