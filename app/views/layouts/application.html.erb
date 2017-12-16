@@ -54,18 +54,21 @@
       <% if notice %>
         <p class="bg-success" style="padding:5px"><%= notice %></p>
       <% end %>
+      <% if alert %>
+        <p class="bg-danger" style="padding:5px"><%= alert %></p>
+      <% end %>
       <% if session[:user_id] %>
       <div class="row">
         <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
           <nav>
             <ul class="nav">
               <li class="submenu">
-                <%= link_to '#' do %>
+                <%= link_to current_user do %>
                   <span class="glyphicon glyphicon-user"></span> Profile
                 <% end %>
               </li>
               <li>
-                <%= link_to '#' do %>
+                <%= link_to topup_user_path(current_user) do %>
                   <span class="glyphicon glyphicon-lock"></span> Topup Gopay
                 <% end %>
               </li>
@@ -77,6 +80,37 @@
               <li>
                 <%= link_to orders_path do %>
                   <span class="glyphicon glyphicon-list-alt"></span> Order History
+                <% end %>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="col-sm-1" style="background-color:solid;"></div>
+        <div class="col-sm-8" style="background-color:#eeeeee;"><%= yield %></div>
+      </div>
+      <% elsif session[:driver_id] %>
+      <div class="row">
+        <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
+          <nav>
+            <ul class="nav">
+              <li class="submenu">
+                <%= link_to current_driver do %>
+                  <span class="glyphicon glyphicon-user"></span> Profile
+                <% end %>
+              </li>
+              <li>
+                <%= link_to topup_driver_path(current_driver) do %>
+                  <span class="glyphicon glyphicon-lock"></span> Topup Gopay
+                <% end %>
+              </li>
+              <li>
+                <%= link_to location_driver_path(current_driver) do %>
+                  <span class="glyphicon glyphicon-lock"></span> Set Location
+                <% end %>
+              </li>
+              <li>
+                <%= link_to orders_path do %>
+                  <span class="glyphicon glyphicon-list-alt"></span> Job History
                 <% end %>
               </li>
             </ul>

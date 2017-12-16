@@ -1,6 +1,5 @@
 class HomeController < ApplicationController
-  skip_before_action :authorize_user
-  # skip_before_action :authorize_driver
+  # skip_before_action :authorize
 
   def index
   end

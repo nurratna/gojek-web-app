@@ -1,6 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :authorize_user
-  # skip_before_action :authorize_driver
+  # skip_before_action :authorize
 
   def new
   end
@@ -12,7 +11,7 @@ class SessionsController < ApplicationController
     if params[:role] == 'user' && user.try(:authenticate, params[:password])
       login_user user
       redirect_to user
-    elsif params[:role] == 'driver' && @driver.try(:authenticate, params[:password])
+    elsif params[:role] == 'driver' && driver.try(:authenticate, params[:password])
       login_driver driver
       redirect_to driver
     elsif params[:role].blank?

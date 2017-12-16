@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-  # before_filter :authenticate
-  skip_before_action :authorize_user, only: [:new, :create]
+  before_action :authorize, except: [:new, :create]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
+  before_action :ensure_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
+  before_action :authorize_user, only: [:index, :new, :create]
 
   # GET /users
   def index
@@ -85,6 +86,25 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :phone, :password, :passsword_confirmation)
+    end
+
+    def ensure_current_user
+      @user = User.find(params[:id])
+      if @user != current_user
+        redirect_to current_user, alert: "Access Denied! You don't have permission"
+      end
+    end
+
+    def authorize_user
+      if !session[:user_id].nil?
+        redirect_to current_user, alert: "Access Denied! You don't have permission"
+      end
+    end
+
+    def authorize
+      if !User.find_by(id: session[:user_id])
+        redirect_to login_url, alert: 'Access Denied! Please Login'
+      end
     end
 
     def authenticate

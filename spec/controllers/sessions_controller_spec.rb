@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe SessionsController do
+  include SessionsHelper
+  
   describe "GET new" do
     it "renders the :new template" do
       get :new
@@ -18,11 +20,13 @@ describe SessionsController do
       context "with valid username and password" do
         it "assigns user_id to session variables" do
           post :create, params: { email: 'user@gmail.com', password: 'longpassword' }
+          login_user(@user)
           expect(session[:user_id]).to eq(@user.id)
         end
 
         it "assigns role to session variables" do
           post :create, params: { email: 'user@gmail.com', password: 'longpassword' }
+          login_user(@user)
           expect(session[:role]).to eq('user')
         end
 
@@ -44,11 +48,13 @@ describe SessionsController do
       context "with valid username and password" do
         it "assigns driver_id to session variables" do
           post :create, params: { email: 'driver@gmail.com', password: 'longpassword' }
+          login_driver(@driver)
           expect(session[:driver_id]).to eq(@driver.id)
         end
 
         it "assigns role to session variables" do
           post :create, params: { email: 'driver@gmail.com', password: 'longpassword' }
+          login_driver(@driver)
           expect(session[:role]).to eq('driver')
         end
 
