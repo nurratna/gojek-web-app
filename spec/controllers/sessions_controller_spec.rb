@@ -2,11 +2,31 @@ require 'rails_helper'
 
 describe SessionsController do
   include SessionsHelper
-  
+
   describe "GET new" do
-    it "renders the :new template" do
-      get :new
-      expect(:response).to render_template :new
+    context 'with logged in' do
+      it "redirects to user#show if user logged in" do
+        user = create(:user, email: 'user@gmail.com', password: 'longpassword', password_confirmation: 'longpassword')
+        login_user(user)
+        get :new
+        expect(response).to redirect_to current_user
+      end
+
+      it "redirects to driver#show if driver logged in" do
+        driver = create(:driver, email: 'driver@gmail.com', password: 'longpassword', password_confirmation: 'longpassword')
+        login_driver(driver)
+        get :new
+        expect(response).to redirect_to current_driver
+      end
+    end
+
+    context 'with logged out' do
+      it "renders the :new template" do
+        logout_user
+        logout_driver
+        get :new
+        expect(response).to render_template :new
+      end
     end
   end
 

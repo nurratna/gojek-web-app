@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  # skip_before_action :authorize
+  before_action :ensure_logout, only: [:new, :create]
 
   def new
   end
@@ -30,4 +30,13 @@ class SessionsController < ApplicationController
       redirect_to home_index_url, notice: 'Logged out'
     end
   end
+
+  private
+    def ensure_logout
+      if !session[:user_id].nil?
+        redirect_to current_user, alert: 'Access Denied! You logged in'
+      elsif !session[:driver_id].nil?
+        redirect_to current_driver, alert: 'Access Denied! You logged in'
+      end
+    end
 end
