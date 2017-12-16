@@ -23,9 +23,9 @@ ActiveRecord::Schema.define(version: 20171215112151) do
     t.integer "gopay", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "location"
-    t.string "latitude"
-    t.string "longitude"
+    t.string "location", default: "Jakarta", null: false
+    t.float "latitude"
+    t.float "longitude"
   end
 
   create_table "orders", force: :cascade do |t|

@@ -8,7 +8,7 @@ FactoryGirl.define do
     password "longpassword"
     password_confirmation "longpassword"
     gopay 0
-    location 'Pasaraya Blok M, Melawai, South Jakarta City, Jakarta'
+    location 'Jakarta'
   end
 
   factory :invalid_driver, parent: :driver do

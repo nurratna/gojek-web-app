@@ -6,7 +6,7 @@ RSpec.describe Driver, type: :model do
     expect(build(:driver)).to be_valid
   end
 
-  it "has a valid with name, email, phone, password and gopay" do
+  it "has a valid with name, email, phone, password, gopay and location" do
     expect(build(:driver)).to be_valid
   end
 
@@ -136,6 +136,11 @@ RSpec.describe Driver, type: :model do
   end
 
   context "with location" do
+    it "save default location when driver created" do
+      driver = create(:driver)
+      expect(driver.location).not_to eq(nil)
+    end
+
     it "is invalid without locatiion" do
       location = build(:driver, location: nil)
       location.valid?

@@ -1,5 +1,5 @@
 class DriversController < ApplicationController
-  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :change_location]
+  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :update_location]
   skip_before_action :authorize_user
 
   # GET /drivers
@@ -29,7 +29,7 @@ class DriversController < ApplicationController
 
     respond_to do |format|
       if @driver.save
-        format.html { redirect_to drivers_url, notice: 'Driver was successfully created.' }
+        format.html { redirect_to drivers_url, notice: 'Driver was successfully created. Your Location default is Jakarta' }
         format.json { render :show, status: :created, location: @driver }
       else
         format.html { render :new }
@@ -84,7 +84,7 @@ class DriversController < ApplicationController
   end
 
   # PATCH /drivers/1/location
-  def change_location
+  def update_location
     respond_to do |format|
       if @driver.loc(params[:location])
         format.html { redirect_to drivers_url, notice: "Location was successfully updated" }
@@ -104,6 +104,6 @@ class DriversController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def driver_params
-      params.require(:driver).permit(:name, :email, :phone, :location,   :password, :password_confirmation)
+      params.require(:driver).permit(:name, :email, :phone, :password, :password_confirmation)
     end
 end
