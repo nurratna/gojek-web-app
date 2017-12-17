@@ -142,21 +142,34 @@ RSpec.describe Driver, type: :model do
   end
 
   context "with location" do
-    it "save default location when driver created" do
+    it "is valid with location" do
       driver = create(:driver)
       expect(driver.location).not_to eq(nil)
     end
 
     it "is invalid without locatiion" do
-      location = build(:driver, location: nil)
-      location.valid?
-      expect(location.errors[:location]).to include("can't be blank")
+      driver = build(:driver, location: nil)
+      driver.valid?
+      expect(driver.errors[:location]).to include("can't be blank")
     end
 
     it 'is invalid if lat-long not found' do
-      location = build(:driver, location: "asdfxacxc")
-      location.valid?
-      expect(location.errors[:location]).to include("not found")
+      driver = build(:driver, location: "asdfxacxc")
+      driver.valid?
+      expect(driver.errors[:location]).to include("not found")
+    end
+  end
+
+  context "with service_type" do
+    it "is valid with service type" do
+      driver = create(:driver)
+      expect(driver.service_type).not_to eq(nil)
+    end
+
+    it "is invalid without service type" do
+      driver = build(:driver, service_type: nil)
+      driver.valid?
+      expect(driver.errors[:service_type]).to include("can't be blank")
     end
   end
 end

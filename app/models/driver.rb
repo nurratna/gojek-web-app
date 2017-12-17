@@ -1,6 +1,8 @@
 class Driver < ApplicationRecord
   has_secure_password
   has_secure_token
+  has_many :orders
+  # belongs_to :location
 
   geocoded_by :location
   before_validation :geocode, if: ->(obj){ obj.location.present? and obj.location_changed? }
@@ -17,6 +19,7 @@ class Driver < ApplicationRecord
   validates :password, length: { minimum: 8 }, allow_blank: true
   validates :gopay, numericality: { greater_than_or_equal_to: 0 }
   validates :location, presence: true
+  validates :service_type, presence: true
 
   validate :geocode_or_reset_coordinates
   validate :ensure_location_latlong_found
@@ -54,5 +57,11 @@ class Driver < ApplicationRecord
         self.latitude = nil
         self.longitude = nil
       end
+    end
+
+    def set_location(params)
+      # params :address
+      # @location = Location.find_or_initialize_by(address: params)
+      # @location.driver_ids <<
     end
 end

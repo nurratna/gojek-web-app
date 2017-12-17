@@ -23,10 +23,11 @@ ActiveRecord::Schema.define(version: 20171216235704) do
     t.integer "gopay", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "token"
     t.string "location"
     t.float "latitude"
     t.float "longitude"
-    t.string "token"
+    t.string "service_type"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -39,10 +40,12 @@ ActiveRecord::Schema.define(version: 20171216235704) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
+    t.bigint "driver_id"
     t.float "origin_long"
     t.float "origin_lat"
     t.float "destination_long"
     t.float "destination_lat"
+    t.index ["driver_id"], name: "index_orders_on_driver_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
@@ -57,5 +60,6 @@ ActiveRecord::Schema.define(version: 20171216235704) do
     t.string "token"
   end
 
+  add_foreign_key "orders", "drivers"
   add_foreign_key "orders", "users"
 end

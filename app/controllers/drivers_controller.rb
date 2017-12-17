@@ -1,8 +1,8 @@
 class DriversController < ApplicationController
   before_action :authorized_driver, except: [:new, :create]
-  before_action :authorized_current_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :update_location]
   before_action :authorized_current_driver_permission, only: [:index, :new, :create]
-  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :update_location]
+  before_action :authorized_current_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :current_location, :job]
+  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :current_location]
 
   # GET /drivers
   # GET /drivers.json
@@ -34,7 +34,7 @@ class DriversController < ApplicationController
         @driver.token
         @driver.regenerate_token
         login_driver @driver
-        format.html { redirect_to @driver, notice: "Welcome #{@driver.name.upcase}. Your Location default is Jakarta" }
+        format.html { redirect_to @driver, notice: "Welcome #{@driver.name.upcase}. Your account was successfully created" }
         format.json { render :show, status: :created, location: @driver }
       else
         format.html { render :new }
@@ -89,10 +89,10 @@ class DriversController < ApplicationController
   end
 
   # PATCH /drivers/1/location
-  def update_location
+  def current_location
     respond_to do |format|
       if @driver.loc(params[:location])
-        format.html { redirect_to drivers_url, notice: "Location was successfully updated" }
+        format.html { redirect_to @driver, notice: "Location was successfully updated" }
         format.json { render :show, status: :ok, location: @driver }
       else
         format.html { render :location }
@@ -100,6 +100,14 @@ class DriversController < ApplicationController
       end
     end
   end
+
+  # GET /users/1/order
+  def job
+    @orders = Order.where(driver_id: current_driver)
+    # status = 1 # Completed
+    # @orders = Order.where("user_id = ? AND service_type = ?", current_user, status)
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -109,7 +117,7 @@ class DriversController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def driver_params
-      params.require(:driver).permit(:name, :email, :phone, :location, :password, :password_confirmation)
+      params.require(:driver).permit(:name, :email, :phone, :location, :service_type, :password, :password_confirmation)
     end
 
     def authorized_driver

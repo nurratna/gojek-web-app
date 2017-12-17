@@ -9,6 +9,8 @@ FactoryGirl.define do
     password_confirmation "longpassword"
     gopay 0
     location 'Jakarta'
+    service_type 'Go Ride'
+    # assosiation :order
   end
 
   factory :invalid_driver, parent: :driver do
@@ -19,5 +21,6 @@ FactoryGirl.define do
     password_confirmation nil
     gopay nil
     location nil
+    service_type nil
   end
 end

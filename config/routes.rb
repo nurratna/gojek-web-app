@@ -7,7 +7,8 @@ Rails.application.routes.draw do
       get 'topup'
       patch 'topup' => :save_topup
       get 'location'
-      patch 'location' => :update_location
+      patch 'location' => :current_location
+      get 'job'
     end
   end
 
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
     member do
       get 'topup'
       patch 'topup' => :save_topup
+      get 'order'
     end
   end
 

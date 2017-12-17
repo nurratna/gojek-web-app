@@ -33,6 +33,11 @@
     </div>
 
     <div class="field">
+    <%= f.label :service_type %>
+    <%= f.select :service_type, Order.service_types.keys, prompt: 'Select a service type' %>
+  </div>
+
+    <div class="field">
       <%= f.label :password, 'Password:' %>
       <%= f.password_field :password, size: 40 %>
     </div>

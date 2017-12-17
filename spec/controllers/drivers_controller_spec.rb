@@ -296,7 +296,7 @@ RSpec.describe DriversController, type: :controller do
         expect(assigns(:driver)).to eq(@driver)
       end
 
-      it "renders the :topup template" do
+      it "renders the :job template" do
         get :location, params: { id: @driver }
         expect(response).to render_template(:location)
       end
@@ -317,7 +317,7 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe "PATCH #update_location" do
+  describe "PATCH #current_location" do
     context 'user logged in' do
       before :each do
         @driver = create(:driver, location: 'tanah abang')
@@ -326,28 +326,61 @@ RSpec.describe DriversController, type: :controller do
 
       context "with valid attribut" do
         it "adds location to driver's location in the database" do
-          patch :update_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
+          patch :current_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
           @driver.reload
           expect(@driver.location). to eq('kemang')
         end
 
         it "redirect to the driver" do
-          patch :update_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
-          expect(response).to redirect_to(drivers_path)
+          patch :current_location, params: { id: @driver, driver: attributes_for(:driver), location: 'kemang' }
+          expect(response).to redirect_to @driver
         end
       end
 
       context "with invalid attribut" do
         it "does not change location to driver's location in the database" do
-          patch :update_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
+          patch :current_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
           @driver.reload
           expect(@driver.location).not_to eq('kemang')
         end
 
         it "re-renders :location template" do
-          patch :update_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
+          patch :current_location, params: { id: @driver, driver: attributes_for(:driver), location: 'ashdgat' }
           expect(response).to render_template(:location)
         end
+      end
+    end
+  end
+
+  describe 'GET #job history' do
+    context 'driver logged in' do
+      it "assigns the requested view job's driver" do
+        other_driver = create(:driver)
+        order1 = build(:order, driver_id: @driver)
+        order2 = build(:order, driver_id: @driver)
+        order3 = build(:order, driver_id: other_driver)
+
+        get :job, params: { id: @driver }
+        expect(assigns(:order)).to eq match_array([order1, order2])
+      end
+
+      it "renders the :job template" do
+        get :job, params: { id: @driver }
+        expect(response).to render_template(:job)
+      end
+
+      it "redirects to current driver#show if requested location other driver" do
+        driver = create(:driver)
+        get :job, params: { id: driver }
+        expect(response).to redirect_to current_driver
+      end
+    end
+
+    context 'driver logged out' do
+      it 'redirects to login page' do
+        logout_driver
+        get :job, params: { id: @driver }
+        expect(response).to redirect_to login_url
       end
     end
   end
