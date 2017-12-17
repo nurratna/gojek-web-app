@@ -9,6 +9,7 @@ FactoryGirl.define do
     status "Completed"
     est_price 7000
     association :user
+    association :driver
   end
 
   factory :invalid_order,parent: :order do

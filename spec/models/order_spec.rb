@@ -71,6 +71,12 @@ RSpec.describe Order, type: :model do
       order.save
       expect(order.destination_lat).not_to eq(nil)
     end
+
+    it 'is invalid if distance > 25 km from origin' do
+      order = build(:order, destination: 'Aceh')
+      order.valid?
+      expect(order.errors[:address]).to include("must not be more than 25 km away from origin")
+    end
   end
 
   context 'with destination lat-long not found' do
@@ -83,6 +89,7 @@ RSpec.describe Order, type: :model do
 
   describe 'relations' do
     it { should belong_to(:user) }
+    it { should belong_to(:driver) }
   end
 
   describe 'paying with gopay' do

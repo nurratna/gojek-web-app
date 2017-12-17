@@ -172,4 +172,8 @@ RSpec.describe Driver, type: :model do
       expect(driver.errors[:service_type]).to include("can't be blank")
     end
   end
+
+  describe "relations" do
+    it { should have_many(:orders) }
+  end
 end

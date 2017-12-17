@@ -140,4 +140,8 @@ RSpec.describe User, type: :model do
       expect(user.errors[:gopay]).to include('must be greater than or equal to 0')
     end
   end
+
+  describe "relations" do
+    it { should have_many(:orders) }
+  end
 end

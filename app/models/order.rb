@@ -1,5 +1,6 @@
 class Order < ApplicationRecord
   belongs_to :user
+  belongs_to :driver
 
   enum service_type: {
     "Go Ride" => 0,
@@ -35,6 +36,7 @@ class Order < ApplicationRecord
 
   validate :ensure_origin_different_with_destination
   validate :ensure_credit_sufficient_if_using_gopay
+  validate :distance_must_be_less_than_or_equal_to_max_dist
   before_save :substracts_credit_if_using_gopay
 
   def cost_goride_per_km
@@ -90,6 +92,12 @@ class Order < ApplicationRecord
       if payment_type == 'Go Pay'
         user.gopay -= est_price
         user.save
+      end
+    end
+
+    def distance_must_be_less_than_or_equal_to_max_dist
+      if calculate_distance > max_dist
+        errors.add(:address, "must not be more than #{max_dist} km away from origin")
       end
     end
 
