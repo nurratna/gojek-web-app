@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :authorized_user, except: [:new, :create]
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
   before_action :authorized_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
   before_action :authorized_current_user_permission, only: [:index, :new, :create]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
   # GET /users
   def index

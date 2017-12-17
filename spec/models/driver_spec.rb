@@ -35,6 +35,12 @@ RSpec.describe Driver, type: :model do
     expect(driver2.errors[:email]).to include("has already been taken")
   end
 
+  it "is invalid with an email other than given format" do
+    driver = build(:driver, email: "nurgmail.com")
+    driver.valid?
+    expect(driver.errors[:email]).to include("format is invalid")
+  end
+
   it "is invalid with duplicate phone number" do
     driver1 = create(:driver, phone: "085277206511")
     driver2 = build(:driver, phone: "085277206511")

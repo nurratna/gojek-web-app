@@ -1,12 +1,17 @@
 class Driver < ApplicationRecord
   has_secure_password
+  has_secure_token
+
   geocoded_by :location
   before_validation :geocode, if: ->(obj){ obj.location.present? and obj.location_changed? }
   after_validation :geocode
 
   before_save { email.downcase! }
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true, format: {
+    with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i,
+    message: 'format is invalid'
+  }
   validates :phone, presence: true, uniqueness: true, length: { maximum: 12 }, numericality: true
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 8 }, allow_blank: true

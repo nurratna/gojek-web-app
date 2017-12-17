@@ -232,7 +232,7 @@ RSpec.describe UsersController, type: :controller do
     context 'user logged out' do
       it 'redirects to login page' do
         logout_user
-        patch :update, params: { id: @user, user: attributes_for(:user) }
+        get :topup, params: { id: @user }
         expect(response).to redirect_to login_url
       end
     end
@@ -275,7 +275,7 @@ RSpec.describe UsersController, type: :controller do
     context 'user logged out' do
       it 'redirects to login page' do
         logout_user
-        patch :update, params: { id: @user, user: attributes_for(:user) }
+        patch :save_topup, params: { id: @user, user: attributes_for(:user) }
         expect(response).to redirect_to login_url
       end
     end
