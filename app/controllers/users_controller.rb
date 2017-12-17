@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorized_user, except: [:new, :create]
-  before_action :authorized_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
+  before_action :authorized_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :order]
   before_action :authorized_current_user_permission, only: [:index, :new, :create]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
@@ -77,6 +77,13 @@ class UsersController < ApplicationController
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # GET /users/1/order
+  def order
+    @orders = Order.where(user_id: current_user)
+    # status = 1 # Completed
+    # @orders = Order.where("user_id = ? AND service_type = ?", current_user, status)
   end
 
   private

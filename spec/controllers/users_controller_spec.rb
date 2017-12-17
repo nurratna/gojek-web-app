@@ -280,4 +280,32 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe 'GET #order' do
+    context 'user logged in' do
+      it "assigns the requested view order's user" do
+        get :order, params: { id: @user}
+        expect(assigns(:user)).to eq(@user)
+      end
+
+      it "renders the :order template" do
+        get :order, params: { id: @user }
+        expect(response).to render_template(:order)
+      end
+
+      it "redirects to current user#show if requested view order's other user" do
+        user = create(:user)
+        get :order, params: { id: user }
+        expect(response).to redirect_to current_user
+      end
+    end
+
+    context 'user logged out' do
+      it 'redirects to login page' do
+        logout_user
+        get :order, params: { id: @user }
+        expect(response).to redirect_to login_url
+      end
+    end
+  end
 end

@@ -1,0 +1,31 @@
+<h1>Order History</h1>
+
+<% if @orders.nil? %>
+  <h2>You don't have Order History</h2>
+<% else %>
+  <table class='table-striped'>
+    <thead align="center">
+      <tr>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Service Type</th>
+        <th>Payment Type</th>
+        <th>Driver</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.origin %></td>
+        <td><%= order.destination %></td>
+        <td><%= order.service_type %></td>
+        <td><%= order.payment_type %></td>
+        <td><%=  %></td>
+        <td><%= number_to_currency(order.est_price, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<%= link_to 'New Oder', new_order_path %>
