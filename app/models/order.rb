@@ -26,6 +26,8 @@ class Order < ApplicationRecord
   # before_validation :geocode_endpoints
   after_validation :set_attributes
 
+  before_save { origin.downcase! }
+  before_save { destination.downcase! }
   validates :origin, presence: true
   validate :ensure_origin_latlong_found
   validates :destination, presence: true

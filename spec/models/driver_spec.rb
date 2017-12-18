@@ -177,4 +177,20 @@ RSpec.describe Driver, type: :model do
     it { should have_many(:orders) }
     # it { should belong_to(:goride).class_name('Location::Goride').with_foreign_key('location_goride_id') }
   end
+
+  describe "current location driver" do
+    context 'with service type is Go Ride' do
+      it "save driver_id to Location::Goride model" do
+        driver = create(:driver, service_type: "Go Ride")
+        expect(driver.location_goride_id).not_to eq(nil)
+      end
+    end
+
+    context 'with service type is Go Car' do
+      it "save driver_id to Location::Gocar model" do
+        driver = create(:driver,  service_type: "Go Car")
+        expect(driver.location_gocar_id).not_to eq(nil)
+      end
+    end
+  end
 end

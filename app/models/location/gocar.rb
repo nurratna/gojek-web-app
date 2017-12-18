@@ -1,5 +1,5 @@
-class Location::Goride < ApplicationRecord
-  has_many :drivers, :foreign_key => :location_goride_id
+class Location::Gocar < ApplicationRecord
+  has_many :drivers, :foreign_key => :location_gocar_id
 
   geocoded_by :address
   before_validation :geocode, if: ->(obj){ obj.address.present? and obj.address_changed? }

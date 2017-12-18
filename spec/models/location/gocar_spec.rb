@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Location::Goride, type: :model do
+RSpec.describe Location::Gocar, type: :model do
   # pending "add some examples to (or delete) #{__FILE__}"
   it "has valid factory" do
     expect(build(:location_goride)).to be_valid
@@ -30,6 +30,6 @@ RSpec.describe Location::Goride, type: :model do
   end
 
   describe "relations" do
-    it { should have_many(:drivers).with_foreign_key('location_goride_id') }
+    it { should have_many(:drivers).with_foreign_key('location_gocar_id') }
   end
 end

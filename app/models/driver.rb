@@ -24,7 +24,7 @@ class Driver < ApplicationRecord
   validate :geocode_or_reset_coordinates
   validate :ensure_location_latlong_found
 
-  before_validation :set_attributes
+  before_validation :set_location
 
   def topup(amount)
     if !(is_numeric?(amount))
@@ -61,16 +61,16 @@ class Driver < ApplicationRecord
       end
     end
 
-    def set_attributes
+    def set_location
       # location = Location::Goride.find_by(address: :location)
       if self.service_type == "Go Ride"
         obj = Location::Goride.find_or_create_by(address: self.location)
         obj.driver_ids << self.id
         self.location_goride_id = obj.id
       else
-        # obj = Location::Gocar.find_or_create_by(address: self.location)
-        # self.location_goride_id = obj.id
-        # obj.driver_ids << self.id
+        obj = Location::Gocar.find_or_create_by(address: self.location)
+        self.location_gocar_id = obj.id
+        obj.driver_ids << self.id
       end
     end
 end
