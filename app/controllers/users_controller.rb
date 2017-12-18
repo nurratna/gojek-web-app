@@ -81,9 +81,8 @@ class UsersController < ApplicationController
 
   # GET /users/1/order
   def order
-    @orders = Order.where(user_id: current_user)
-    # status = 1 # Completed
-    # @orders = Order.where("user_id = ? AND service_type = ?", current_user, status)
+    # @orders = Order.where(user_id: current_user)
+    @orders = Order.where("user_id = ? AND status = ?", current_user, 1)
   end
 
   private

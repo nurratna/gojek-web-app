@@ -65,7 +65,10 @@ class Driver < ApplicationRecord
       # location = Location::Goride.find_by(address: :location)
       if self.service_type == "Go Ride"
         obj = Location::Goride.find_or_create_by(address: self.location)
+        obj.latitude = self.latitude
+        obj.longitude = self.longitude
         obj.driver_ids << self.id
+        obj.save
         self.location_goride_id = obj.id
       else
         obj = Location::Gocar.find_or_create_by(address: self.location)

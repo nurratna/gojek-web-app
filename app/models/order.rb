@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include CalculateDistance
+
   belongs_to :user
   belongs_to :driver, optional: true
 
@@ -23,8 +25,6 @@ class Order < ApplicationRecord
   before_validation :geocode, if: ->(obj){ obj.origin.present? and obj.origin_changed? }
   before_validation :geocode, if: ->(obj){ obj.destination.present? and obj.destination_changed? }
   validate :geocode_endpoints
-  # before_validation :geocode_endpoints
-  after_validation :set_attributes
 
   before_save { origin.downcase! }
   before_save { destination.downcase! }
@@ -38,8 +38,11 @@ class Order < ApplicationRecord
 
   validate :ensure_origin_different_with_destination
   validate :ensure_credit_sufficient_if_using_gopay
-  validate :distance_must_be_less_than_or_equal_to_max_dist
+  validate :distance_must_be_less_than_or_equal_to_max_dist_origin_destination
   before_save :substracts_credit_if_using_gopay
+
+  after_validation :set_attributes
+  after_validation :find_driver
 
   def cost_goride_per_km
     1500
@@ -49,37 +52,75 @@ class Order < ApplicationRecord
     2500
   end
 
-  def max_dist
+  def max_dist_origin_destination
     25
   end
 
-  def calculate_distance
-   dist = 0
-   if geocoder_attributes_exist?
-    coor_origin = Geocoder.coordinates(origin)
-    coor_destination = Geocoder.coordinates(destination)
-    dist = Geocoder::Calculations.distance_between(coor_origin, coor_destination).round(2)
-   end
-   dist
- end
+  def max_dist_origin_driver
+    1
+  end
 
- def calculate_est_price
-   est_price = 0
-   if service_type == 'Go Ride'
-     est_price = (calculate_distance * cost_goride_per_km).round
-     est_price = cost_goride_per_km if est_price < cost_goride_per_km
-   else
-     est_price = (calculate_distance * cost_gocar_per_km).round
-     est_price = cost_gocar_per_km if est_price < cost_gocar_per_km
-   end
-   est_price
- end
+  def calculate_distance_origin_destination
+    dist = 0
+    if geocoder_attributes_exist?
+      dist = distance_between(origin_lat, origin_long, destination_lat, destination_long).round(2)
+    end
+    dist
+  end
 
-  private
+  def calculate_est_price
+    est_price = 0
+    if service_type == 'Go Ride'
+      est_price = (calculate_distance_origin_destination * cost_goride_per_km).round
+      est_price = cost_goride_per_km if est_price < cost_goride_per_km
+    else
+      est_price = (calculate_distance_origin_destination * cost_gocar_per_km).round
+      est_price = cost_gocar_per_km if est_price < cost_gocar_per_km
+    end
+    est_price
+  end
+
+  def set_drivers
+    drivers = []
+    if self.service_type == 'Go Ride'
+      locations = Location::Goride.all
+      locations.each do |location|
+        dist = distance_between(origin_lat, origin_long, location.latitude, location.longitude).round(2)
+        drivers.push(ids: location.driver_ids, dist: dist)
+      end
+    else
+      locations = Location::Gocar.all
+      locations.each do |location|
+        dist = distance_between(origin_lat, origin_long, location.latitude, location.longitude).round(2)
+        drivers.push(ids: location.driver_ids, dist: dist)
+      end
+    end
+    drivers
+  end
+
+ private
     def set_attributes
       self.est_price = calculate_est_price
-      # self.status 0
+      self.status = 0
+    end
 
+    def find_driver
+      drivers = set_drivers.sort_by { |hsh| hsh[:dist] }
+      drivers.each do |driver|
+        if driver[:dist] > max_dist_origin_driver
+          self.status = 2 # cancel
+          self.driver_id = nil
+          break;
+        elsif driver[:ids].empty?
+          self.status = 2 # cancel
+          self.driver_id = nil
+          break;
+        else
+          self.status = 1 # Completed
+          self.driver_id = driver[:ids].shuffle.first
+          break;
+        end
+      end
     end
 
     def ensure_credit_sufficient_if_using_gopay
@@ -97,11 +138,18 @@ class Order < ApplicationRecord
       end
     end
 
-    def distance_must_be_less_than_or_equal_to_max_dist
-      if calculate_distance > max_dist
-        errors.add(:address, "must not be more than #{max_dist} km away from origin")
+    def distance_must_be_less_than_or_equal_to_max_dist_origin_destination
+      if calculate_distance_origin_destination > max_dist_origin_destination
+        errors.add(:address, "must not be more than #{max_dist_origin_destination} km away from origin")
       end
     end
+
+    # def distance_must_be_less_than_or_equal_to_max_dist_origin_driver
+    #   if select_drivers.last.min > max_dist_origin_driver
+    #     update(status: 2) # cancel
+    #     errors.add(:status, "Sorry, Driver not found")
+    #   end
+    # end
 
     def geocode_endpoints
       if origin_changed?
@@ -113,25 +161,15 @@ class Order < ApplicationRecord
       end
     end
 
-    def geocode_endpoints_destination
-      if destination_changed?
-        geocoded = Geocoder.search(destination).first
-        if geocoded
-          self.destination_lat = geocoded.latitude
-          self.destination_long = geocoded.longitude
-        end
-      end
-    end
-
     def ensure_origin_latlong_found
       if origin_lat.nil?
-        errors.add(:origin, "not found")
+        errors.add(:origin, "not found. Please check your connection or typo")
       end
     end
 
     def ensure_destination_latlong_found
       if destination_lat.nil?
-        errors.add(:destination, "not found")
+        errors.add(:destination, "not found. Please check your connection or typo")
       end
     end
 

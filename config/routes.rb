@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root 'home#index', as: 'home_index'
 
-  resources :drivers  do
+  resources :drivers, except: :destroy  do
     member do
       get 'topup'
       patch 'topup' => :save_topup
@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users do
+  resources :users, except: :destroy do
     member do
       get 'topup'
       patch 'topup' => :save_topup
@@ -26,6 +26,6 @@ Rails.application.routes.draw do
     delete 'logout' => :destroy
   end
 
-  resources :orders#, only: [:index, :show, :new, :create]
+  resources :orders, only: [:index, :show, :new, :create]
 
 end

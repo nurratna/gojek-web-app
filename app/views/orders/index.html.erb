@@ -9,6 +9,7 @@
       <th>Service Type</th>
       <th>Payment Type</th>
       <th>Total Price</th>
+      <th>driver</th>
     </tr>
   </thead>
   <% @orders.each do |order| %>
@@ -19,6 +20,8 @@
       <td><%= order.service_type %></td>
       <td><%= order.payment_type %></td>
       <td><%= number_to_currency(order.est_price, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+      <td><%= order.driver_id %></td>
+        <td><%= order.status %></td>
       <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
     </tr>
   <% end %>

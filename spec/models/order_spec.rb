@@ -61,7 +61,7 @@ RSpec.describe Order, type: :model do
     it 'is invalid if lat-long not found' do
       order = build(:order, origin: "asdfxzcxc")
       order.valid?
-      expect(order.errors[:origin]).to include("not found")
+      expect(order.errors[:origin]).to include("not found. Please check your connection or typo")
     end
   end
 
@@ -83,7 +83,7 @@ RSpec.describe Order, type: :model do
     it 'is invalid if lat-long not found' do
       order = build(:order, destination: "asdfxzcxc")
       order.valid?
-      expect(order.errors[:destination]).to include("not found")
+      expect(order.errors[:destination]).to include("not found. Please check your connection or typo")
     end
   end
 
@@ -125,6 +125,40 @@ RSpec.describe Order, type: :model do
 
       it 'does not substracts user gopay' do
         expect(@order.user.gopay).not_to eq(0)
+      end
+    end
+  end
+
+  describe 'create order' do
+    context 'driver found' do
+      before :each do
+        driver = create(:driver, location: 'sarinah', service_type: 'Go Ride')
+        @order = create(:order, origin: 'sarinah', destination: 'tanah abang', service_type: 'Go Ride', driver: driver)
+        @order.set_drivers
+      end
+
+      it "changes status to be completed" do
+        expect(@order.status).to eq("Completed")
+      end
+
+      it "saves driver_id in order model" do
+        expect(@order.driver_id).not_to eq(nil)
+      end
+    end
+
+    context 'driver not found' do
+      before :each do
+        driver = create(:driver, location: 'bandung', service_type: 'Go Ride')
+        @order = create(:order, origin: 'sarinah', destination: 'tanah abang', service_type: 'Go Ride', driver: driver)
+        @order.set_drivers
+      end
+
+      it "changes status to be cancel" do
+        expect(@order.status).to eq("Cancel")
+      end
+
+      it "does not save driver_id in order model" do
+        expect(@order.driver_id).to eq(nil)
       end
     end
   end

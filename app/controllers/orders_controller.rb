@@ -22,8 +22,14 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.save
-        format.html { redirect_to @order, notice: 'Thank you for your order' }
-        format.json { render :show, status: :created, location: @order }
+        if @order.status == "Completed"
+          driver = Driver.find(@order.driver_id)
+          format.html { redirect_to @order, notice: "Thank you for your order. Your driver is #{driver.name}" }
+          format.json { render :show, status: :created, location: @order }
+        else
+          format.html { redirect_to current_user, alert: 'Sorry, your driver is not found' }
+          format.json { render json: @order.errors, status: :unprocessable_entity }
+        end
       else
         format.html { render :new }
         format.json { render json: @order.errors, status: :unprocessable_entity }
