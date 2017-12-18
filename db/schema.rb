@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171216235704) do
+ActiveRecord::Schema.define(version: 20171217214155) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 20171216235704) do
     t.float "latitude"
     t.float "longitude"
     t.string "service_type"
+    t.bigint "location_goride_id"
+    t.index ["location_goride_id"], name: "index_drivers_on_location_goride_id"
+  end
+
+  create_table "location_gorides", force: :cascade do |t|
+    t.string "address"
+    t.string "latitude"
+    t.string "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "orders", force: :cascade do |t|
@@ -60,6 +70,7 @@ ActiveRecord::Schema.define(version: 20171216235704) do
     t.string "token"
   end
 
+  add_foreign_key "drivers", "location_gorides"
   add_foreign_key "orders", "drivers"
   add_foreign_key "orders", "users"
 end

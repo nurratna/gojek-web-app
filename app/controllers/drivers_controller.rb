@@ -28,7 +28,6 @@ class DriversController < ApplicationController
   # POST /drivers.json
   def create
     @driver = Driver.new(driver_params)
-
     respond_to do |format|
       if @driver.save
         @driver.token
@@ -48,6 +47,7 @@ class DriversController < ApplicationController
   def update
     respond_to do |format|
       if @driver.update(driver_params)
+        # @driver.set_location_goride(params[:location])
         format.html { redirect_to @driver, notice: 'Driver was successfully updated.' }
         format.json { render :show, status: :ok, location: @driver }
       else

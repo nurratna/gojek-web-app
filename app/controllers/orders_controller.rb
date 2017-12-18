@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
+  before_action :authorized_user
   before_action :set_order, only: [:show, :destroy]
-  # skip_before_action
 
   def index
     @orders = Order.all
@@ -49,5 +49,11 @@ class OrdersController < ApplicationController
 
     def order_params
       params.require(:order).permit(:origin, :destination, :service_type, :payment_type)
+    end
+
+    def authorized_user
+      if !User.find_by(id: session[:user_id])
+        redirect_to login_url, alert: 'Access Denied! Please Login'
+      end
     end
 end

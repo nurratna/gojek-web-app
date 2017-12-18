@@ -10,7 +10,7 @@ FactoryGirl.define do
     gopay 0
     location 'Jakarta'
     service_type 'Go Ride'
-    # assosiation :order
+    # association :goride, :class_name => 'Location::Goride', :foreign_key => :location_goride_id
   end
 
   factory :invalid_driver, parent: :driver do

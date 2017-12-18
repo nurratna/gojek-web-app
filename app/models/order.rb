@@ -1,6 +1,6 @@
 class Order < ApplicationRecord
   belongs_to :user
-  belongs_to :driver
+  belongs_to :driver, optional: true
 
   enum service_type: {
     "Go Ride" => 0,

@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe OrdersController, type: :controller do
+  include SessionsHelper
+
   before :each do
-    user = create(:user)
-    session[:user_id] = user.id
+    @user = create(:user)
+    login_user @user
   end
 
   describe "GET #index" do
@@ -67,12 +69,12 @@ RSpec.describe OrdersController, type: :controller do
     context 'with valid attributes' do
       it 'saves the new order in the database' do
         expect {
-          post :create, params: { order: attributes_for(:order) }
+          post :create, params: { order: attributes_for(:order, user_id: @user) }
         }.to change(Order, :count).by(1)
       end
 
       it 'redirects to order if logged in' do
-        post :create, params: { order: attributes_for(:order) }
+        post :create, params: { order: attributes_for(:order, user_id: @user) }
         expect(response).to redirect_to(assigns(:order))
       end
     end

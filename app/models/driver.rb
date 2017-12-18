@@ -2,7 +2,7 @@ class Driver < ApplicationRecord
   has_secure_password
   has_secure_token
   has_many :orders
-  # belongs_to :location
+  # belongs_to :goride, :class_name => 'Location::Goride', :foreign_key => :location_goride_id
 
   geocoded_by :location
   before_validation :geocode, if: ->(obj){ obj.location.present? and obj.location_changed? }
@@ -23,6 +23,8 @@ class Driver < ApplicationRecord
 
   validate :geocode_or_reset_coordinates
   validate :ensure_location_latlong_found
+
+  before_validation :set_attributes
 
   def topup(amount)
     if !(is_numeric?(amount))
@@ -59,9 +61,16 @@ class Driver < ApplicationRecord
       end
     end
 
-    def set_location(params)
-      # params :address
-      # @location = Location.find_or_initialize_by(address: params)
-      # @location.driver_ids <<
+    def set_attributes
+      # location = Location::Goride.find_by(address: :location)
+      if self.service_type == "Go Ride"
+        obj = Location::Goride.find_or_create_by(address: self.location)
+        obj.driver_ids << self.id
+        self.location_goride_id = obj.id
+      else
+        # obj = Location::Gocar.find_or_create_by(address: self.location)
+        # self.location_goride_id = obj.id
+        # obj.driver_ids << self.id
+      end
     end
 end

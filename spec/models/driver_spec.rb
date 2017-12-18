@@ -175,5 +175,6 @@ RSpec.describe Driver, type: :model do
 
   describe "relations" do
     it { should have_many(:orders) }
+    # it { should belong_to(:goride).class_name('Location::Goride').with_foreign_key('location_goride_id') }
   end
 end

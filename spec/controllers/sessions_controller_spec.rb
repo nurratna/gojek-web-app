@@ -25,7 +25,7 @@ describe SessionsController do
         logout_user
         logout_driver
         get :new
-        expect(respons  e).to render_template :new
+        expect(response).to render_template :new
       end
     end
   end
