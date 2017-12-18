@@ -67,6 +67,11 @@ class DriversController < ApplicationController
     end
   end
 
+  # GET /driver/1/gopay
+  def gopay
+    @driver = Driver.find(6)
+  end
+
   # GET /driver/1/topup
   def topup
   end
@@ -75,7 +80,7 @@ class DriversController < ApplicationController
   def save_topup
     respond_to do |format|
       if @driver.topup(params[:topup_gopay])
-        format.html { redirect_to drivers_url, notice: "Go Pay was successfully updated" }
+        format.html { redirect_to @driver, notice: "Go Pay was successfully updated" }
         format.json { render :show, status: :ok, location: @driver }
       else
         format.html { render :topup }

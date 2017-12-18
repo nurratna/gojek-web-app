@@ -43,6 +43,7 @@ class Order < ApplicationRecord
 
   after_validation :set_attributes
   after_validation :find_driver
+  after_validation :topup_balance_driver_and_changes_location
 
   def cost_goride_per_km
     1500
@@ -118,8 +119,17 @@ class Order < ApplicationRecord
         else
           self.status = 1 # Completed
           self.driver_id = driver[:ids].shuffle.first
+
           break;
         end
+      end
+    end
+
+    def topup_balance_driver_and_changes_location
+      if self.payment_type == "Go Pay" && self.status == "Completed"
+        obj = Driver.find(self.driver_id)
+        obj.update(gopay: obj.gopay + calculate_est_price)
+        obj.update(location: destination)
       end
     end
 
@@ -143,13 +153,6 @@ class Order < ApplicationRecord
         errors.add(:address, "must not be more than #{max_dist_origin_destination} km away from origin")
       end
     end
-
-    # def distance_must_be_less_than_or_equal_to_max_dist_origin_driver
-    #   if select_drivers.last.min > max_dist_origin_driver
-    #     update(status: 2) # cancel
-    #     errors.add(:status, "Sorry, Driver not found")
-    #   end
-    # end
 
     def geocode_endpoints
       if origin_changed?

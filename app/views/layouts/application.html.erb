@@ -99,8 +99,8 @@
                 <% end %>
               </li>
               <li>
-                <%= link_to topup_driver_path(current_driver) do %>
-                  <span class="glyphicon glyphicon-lock"></span> Topup Gopay
+                <%= link_to gopay_driver_path(current_driver) do %>
+                  <span class="glyphicon glyphicon-lock"></span> Gopay Balance
                 <% end %>
               </li>
               <li>
@@ -109,7 +109,7 @@
                 <% end %>
               </li>
               <li>
-                <%= link_to orders_path do %>
+                <%= link_to job_driver_path(current_driver) do %>
                   <span class="glyphicon glyphicon-list-alt"></span> Job History
                 <% end %>
               </li>

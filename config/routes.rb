@@ -4,8 +4,9 @@ Rails.application.routes.draw do
 
   resources :drivers, except: :destroy  do
     member do
-      get 'topup'
-      patch 'topup' => :save_topup
+      get 'gopay'
+      # get 'topup'
+      # patch 'topup' => :save_topup
       get 'location'
       patch 'location' => :current_location
       get 'job'

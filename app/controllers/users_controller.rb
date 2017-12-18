@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   def save_topup
     respond_to do |format|
       if @user.topup(params[:topup_gopay])
-        format.html { redirect_to users_url, notice: "Go Pay was successfully updated" }
+        format.html { redirect_to @user, notice: "Go Pay was successfully updated" }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :topup }
