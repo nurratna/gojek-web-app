@@ -142,7 +142,7 @@ class Order < ApplicationRecord
     end
 
     def substracts_credit_if_using_gopay
-      if payment_type == 'Go Pay'
+      if payment_type == 'Go Pay' && status == "Completed"
         user.gopay -= est_price
         user.save
       end
