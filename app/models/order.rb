@@ -39,22 +39,22 @@ class Order < ApplicationRecord
   validate :ensure_origin_different_with_destination
   validate :ensure_credit_sufficient_if_using_gopay
   validate :distance_must_be_less_than_or_equal_to_max_dist_origin_destination
-  before_save :substracts_credit_if_using_gopay
 
   after_validation :set_attributes
   after_validation :find_driver
   after_validation :topup_balance_driver_and_changes_location
+  after_validation :substracts_credit_if_using_gopay_and_state_completed
 
   def cost_goride_per_km
-    1500
+    3500
   end
 
   def cost_gocar_per_km
-    2500
+    6500
   end
 
   def max_dist_origin_destination
-    25
+    50
   end
 
   def max_dist_origin_driver
@@ -141,9 +141,9 @@ class Order < ApplicationRecord
       end
     end
 
-    def substracts_credit_if_using_gopay
+    def substracts_credit_if_using_gopay_and_state_completed
       if payment_type == 'Go Pay' && status == "Completed"
-        user.gopay -= est_price
+        user.gopay -= calculate_est_price
         user.save
       end
     end

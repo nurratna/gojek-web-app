@@ -254,7 +254,7 @@ RSpec.describe UsersController, type: :controller do
 
         it "redirect to the user" do
           patch :save_topup, params: { id: @user, user: attributes_for(:user), topup_gopay: 150000 }
-          expect(response).to redirect_to(users_path)
+          expect(response).to redirect_to(@user)
         end
       end
 

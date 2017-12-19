@@ -1,8 +1,8 @@
 class DriversController < ApplicationController
   before_action :authorized_driver, except: [:new, :create]
   before_action :authorized_current_driver_permission, only: [:index, :new, :create]
-  before_action :authorized_current_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :current_location, :job]
-  before_action :set_driver, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :location, :current_location]
+  before_action :authorized_current_driver, only: [:show, :edit, :update, :destroy, :gopay, :location, :current_location, :job]
+  before_action :set_driver, only: [:show, :edit, :update, :destroy, :gopay, :location, :current_location]
 
   # GET /drivers
   # GET /drivers.json
@@ -59,35 +59,34 @@ class DriversController < ApplicationController
 
   # DELETE /drivers/1
   # DELETE /drivers/1.json
-  def destroy
-    @driver.destroy
-    respond_to do |format|
-      format.html { redirect_to drivers_url, notice: 'Driver was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
+  # def destroy
+  #   @driver.destroy
+  #   respond_to do |format|
+  #     format.html { redirect_to drivers_url, notice: 'Driver was successfully destroyed.' }
+  #     format.json { head :no_content }
+  #   end
+  # end
 
   # GET /driver/1/gopay
   def gopay
-    @driver = Driver.find(6)
   end
 
-  # GET /driver/1/topup
-  def topup
-  end
-
-  # PATCH /drivers/1/topup
-  def save_topup
-    respond_to do |format|
-      if @driver.topup(params[:topup_gopay])
-        format.html { redirect_to @driver, notice: "Go Pay was successfully updated" }
-        format.json { render :show, status: :ok, location: @driver }
-      else
-        format.html { render :topup }
-        format.json { render json: @driver.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # GET /driver/1/topup
+  # def topup
+  # end
+  #
+  # # PATCH /drivers/1/topup
+  # def save_topup
+  #   respond_to do |format|
+  #     if @driver.topup(params[:topup_gopay])
+  #       format.html { redirect_to @driver, notice: "Go Pay was successfully updated" }
+  #       format.json { render :show, status: :ok, location: @driver }
+  #     else
+  #       format.html { render :topup }
+  #       format.json { render json: @driver.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # GET /driver/1/location
   def location

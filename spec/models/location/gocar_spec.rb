@@ -17,16 +17,10 @@ RSpec.describe Location::Gocar, type: :model do
   end
 
   it "is invalid with duplicate address" do
-    location1 = create(:location_goride, address: "Jakarta")
-    location2 = build(:location_goride, address: "Jakarta")
+    location1 = create(:location_goride, address: "jakarta")
+    location2 = build(:location_goride, address: "jakarta")
     location2.valid?
     expect(location2.errors[:address]).to include("has already been taken")
-  end
-
-  it 'is invalid if lat-long not found' do
-    location = build(:location_goride, address: "asdfxacxc")
-    location.valid?
-    expect(location.errors[:address]).to include("not found")
   end
 
   describe "relations" do

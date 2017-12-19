@@ -228,63 +228,22 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe 'GET #topup' do
+  describe 'GET #gopay' do
     context 'driver logged in' do
-      it 'assigns the requested topup to driver' do
-        get :topup, params: { id: @driver}
+      it 'assigns the requested to driver' do
+        get :gopay, params: { id: @driver }
         expect(assigns(:driver)).to eq(@driver)
       end
 
-      it "renders the :topup template" do
-        get :topup, params: { id: @driver }
-        expect(response).to render_template(:topup)
+      it "renders the :job template" do
+        get :gopay, params: { id: @driver }
+        expect(response).to render_template(:gopay)
       end
 
-      it "redirects to current driver#show if requested topup other driver" do
+      it "redirects to current driver#show if requested location other driver" do
         driver = create(:driver)
-        get :topup, params: { id: driver }
+        get :gopay, params: { id: driver }
         expect(response).to redirect_to current_driver
-      end
-    end
-
-    context 'driver logged out' do
-      it 'redirects to login page' do
-        logout_driver
-        patch :update, params: { id: @driver, driver: attributes_for(:driver) }
-        expect(response).to redirect_to login_url
-      end
-    end
-  end
-
-  describe "PATCH #save_topup" do
-    before :each do
-      @driver = create(:driver, gopay: 50000)
-      login_driver(@driver)
-    end
-
-    context "with valid attribut" do
-      it "adds topup amount to driver's gopay in the database" do
-        patch :save_topup, params: { id: @driver, driver: attributes_for(:driver), topup_gopay: 150000 }
-        @driver.reload
-        expect(@driver.gopay). to eq(200000)
-      end
-
-      it "redirect to the driver" do
-        patch :save_topup, params: { id: @driver, driver: attributes_for(:driver), topup_gopay: 150000 }
-        expect(response).to redirect_to(drivers_path)
-      end
-    end
-
-    context "with invalid attribut" do
-      it "does not change topup amount to driver's gopay in the database" do
-        patch:save_topup, params: { id: @driver, driver: attributes_for(:driver), topup_gopay: -50000 }
-        @driver.reload
-        expect(@driver.gopay).not_to eq(0)
-      end
-
-      it "re-renders :topup template" do
-        patch :save_topup, params: { id: @driver, driver: attributes_for(:driver), topup_gopay: -50000 }
-        expect(response).to render_template(:topup)
       end
     end
   end
