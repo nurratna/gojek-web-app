@@ -79,8 +79,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/order
   def order
-    # @orders = Order.where(user_id: current_user)
-    @orders = Order.where("user_id = ? AND status = ?", current_user, 1)
+    @orders = Order.where("user_id = ? AND status = ?", current_user, 1).paginate(:page => params[:page], :per_page => 5).order('created_at DESC')
   end
 
   private

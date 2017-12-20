@@ -7,6 +7,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
+          <th>Timestamp</th>
           <th>Origin</th>
           <th>Destination</th>
           <th>User</th>
@@ -15,6 +16,7 @@
       </thead>
       <% @orders.each do |order| %>
         <tr>
+          <td><%= order.created_at %></td>
           <td><%= order.origin %></td>
           <td><%= order.destination %></td>
           <td>
@@ -27,3 +29,5 @@
     </table>
   </div>
 <% end %>
+
+<%= will_paginate @orders %>

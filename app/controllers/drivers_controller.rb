@@ -78,7 +78,9 @@ class DriversController < ApplicationController
 
   # GET /users/1/order
   def job
-    @orders = Order.where(driver_id: current_driver)
+    # @orders = Order.where(driver_id: current_driver)
+    @orders = Order.where(driver_id: current_driver).paginate(:page => params[:page], :per_page => 5).order('created_at DESC')
+
   end
 
 
