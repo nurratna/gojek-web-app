@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :dont_accses, only: [:destroy]
+  before_action :dont_accses, only: [:index, :destroy]
   before_action :authorize_user_login
   before_action :set_order, only: [:show, :destroy]
 
@@ -24,6 +24,7 @@ class OrdersController < ApplicationController
           driver = Driver.find(@order.driver_id)
           format.html { redirect_to @order, notice: "Thank you for your order. Your driver is #{driver.name}" }
           format.json { render :show, status: :created, location: @order }
+          flash[:notice] = "Post successfully created"
         else
           format.html { redirect_to current_user, alert: 'Sorry, your driver is not found' }
           format.json { render json: @order.errors, status: :unprocessable_entity }

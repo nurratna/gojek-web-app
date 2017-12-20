@@ -104,12 +104,11 @@ RSpec.describe Order, type: :model do
         expect(order).to be_valid
       end
 
-      # it 'substracts user gopay credit with est_price if state is completed' do
-      #   order = build(:order, payment_type: 'Go Pay', status: "Completed")
-      #   order.calculate_est_price
-      #   order.save
-      #   expect(@user.gopay).to eq(150000 - order.calculate_est_price)
-      # end
+      it 'substracts user gopay credit with est_price if state is completed' do
+        order = build(:order, origin: 'sarinah', destination: 'tanah abang', payment_type: 'Go Pay', status: "Completed")
+        order.save
+        expect(order.est_price).to eq(150000 - order.est_price)
+      end
 
       it 'unsubstracts user gopay credit with est_price if state is cancel' do
         order = build(:order, payment_type: 'Go Pay', status: "Cancel")

@@ -313,15 +313,15 @@ RSpec.describe DriversController, type: :controller do
 
   describe 'GET #job history' do
     context 'driver logged in' do
-      # it "assigns the requested view job's driver" do
-      #   other_driver = create(:driver)
-      #   order1 = build(:order, driver_id: @driver)
-      #   order2 = build(:order, driver_id: @driver)
-      #   order3 = build(:order, driver_id: other_driver)
-      #
-      #   get :job, params: { id: @driver }
-      #   expect(assigns(:order)).to eq match_array([order1, order2])
-      # end
+      it "assigns the requested view job's driver" do
+        other_driver = create(:driver)
+        order1 = create(:order, driver_id: @driver)
+        order2 = create(:order, driver_id: @driver)
+        order3 = create(:order, driver_id: other_driver)
+
+        get :job, params: { id: @driver }
+        expect(assigns(:order)).to eq match_array([order1, order2])
+      end
 
       it "renders the :job template" do
         get :job, params: { id: @driver }
