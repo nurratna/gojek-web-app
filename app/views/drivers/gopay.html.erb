@@ -1,11 +1,15 @@
-<h1>Go Pay Balance</h1>
-<div>
-  <strong>Name:</strong>
-  <%= @driver.name %>
-</div>
-<div>
-  <strong>Gopay Credit:</strong>
-  <%= @driver.gopay %>
-</div>
-
-<%= link_to 'Back', drivers_path %>
+<h1>GoPay Balance</h1>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <td><%= @driver.name %></td>
+      </tr>
+      <tr>
+        <th>Gopay Credit</th>
+        <td><%= number_to_currency(@driver.gopay, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+      </tr>
+    </thead>
+  </table>
+ </div>

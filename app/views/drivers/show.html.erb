@@ -1,24 +1,33 @@
 <h1>Details Driver</h1>
-
-<p>
-  <strong>Name:</strong>
-  <%= @driver.name %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @driver.email %>
-</p>
-
-<p>
-  <strong>Phone:</strong>
-  <%= @driver.phone %>
-</p>
-
-<p>
-  <strong>Gopay:</strong>
-  <%= @driver.gopay %>
-</p>
-
-<%= link_to 'Edit', edit_driver_path(@driver) %> |
-<%= link_to 'Back', drivers_path %>
+<div class="table-responsive">
+  <table class="table table-hover">
+      <tr>
+        <th>Name</th>
+        <td><%= @driver.name %></td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td><%= @driver.email %></td>
+      </tr>
+      <tr>
+        <th>Phone</th>
+        <td><%= @driver.phone %></td>
+      </tr>
+      <tr>
+        <th>Location</th>
+        <td><%= @driver.location %></td>
+      </tr>
+      <tr>
+        <th>Service Type</th>
+        <td><%= @driver.service_type %></td>
+      </tr>
+      <tr>
+        <th>Gopay</th>
+        <td><%= number_to_currency(@driver.gopay, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><%= link_to 'Edit', edit_driver_path(@driver) %></td>
+      </tr>
+  </table>
+</div>

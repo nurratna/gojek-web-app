@@ -72,8 +72,6 @@ class Driver < ApplicationRecord
         self.location_goride_id = obj.id
       else
         obj = Location::Gocar.find_or_create_by(address: self.location)
-        self.location_gocar_id = obj.id
-        obj.driver_ids << self.id
         obj.latitude = self.latitude
         obj.longitude = self.longitude
         obj.driver_ids << self.id

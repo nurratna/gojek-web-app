@@ -1,24 +1,25 @@
-<h1>User Detail</h1>
-<div>
-  <strong>Name:</strong>
-  <%= @user.name %>
+<h1>Details User</h1>
+<div class="table-responsive">
+  <table class="table table-hover">
+      <tr>
+        <th>Name</th>
+        <td><%= @user.name %></td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td><%= @user.email %></td>
+      </tr>
+      <tr>
+        <th>Phone</th>
+        <td><%= @user.phone %></td>
+      </tr>
+      <tr>
+        <th>Gopay</th>
+        <td><%= number_to_currency(@user.gopay, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td><%= link_to 'Edit', edit_user_path(@user) %></td>
+      </tr>
+  </table>
 </div>
-
-<div>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</div>
-
-<div>
-  <strong>Phone:</strong>
-  <%= @user.phone %>
-</div>
-
-<div>
-  <strong>Gopay Credit:</strong>
-  <%= number_to_currency(@user.gopay, unit: 'Rp. ', delimiter: '.', separator: ',') %>
-</div>
-
-
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>

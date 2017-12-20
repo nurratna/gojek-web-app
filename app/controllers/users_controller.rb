@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_login, except: [:new, :create]
-  before_action :authorized_logout, only: [:index, :new, :create]
+  before_action :authorize_logout, only: [:index, :new, :create]
   before_action :authorized_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :order]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 

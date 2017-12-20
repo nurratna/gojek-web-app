@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FinalProject</title>
+    <title>Gojek App</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -23,7 +23,7 @@
                 <span class="glyphicon glyphicon-home"></span> Home
               <% end %>
             </li>
-            <% if session[:user_id] || session[:driver_id]%>
+            <% if logged_in_user? || logged_in_driver?%>
               <li>
                 <%= link_to logout_path, method: :delete do %>
                   <span class="glyphicon glyphicon-log-out"></span> Sign Out
@@ -57,7 +57,7 @@
       <% if alert %>
         <p class="bg-danger" style="padding:5px"><%= alert %></p>
       <% end %>
-      <% if session[:user_id] %>
+      <% if logged_in_user? %>
       <div class="row">
         <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
           <nav>
@@ -88,7 +88,7 @@
         <div class="col-sm-1" style="background-color:solid;"></div>
         <div class="col-sm-8" style="background-color:#eeeeee;"><%= yield %></div>
       </div>
-      <% elsif session[:driver_id] %>
+      <% elsif logged_in_driver? %>
       <div class="row">
         <div class="col-sm-3" style="background-color:#eeeeee; padding: 2em;">
           <nav>

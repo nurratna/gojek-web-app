@@ -33,10 +33,10 @@ class SessionsController < ApplicationController
 
   private
     def ensure_logout
-      if !session[:user_id].nil?
-        redirect_to current_user, alert: 'Access Denied! You logged in us'
-      elsif !session[:driver_id].nil?
-        redirect_to current_driver, alert: 'Access Denied! You logged in dr'
+      if logged_in_user?
+        redirect_to current_user, alert: 'Access Denied! You logged in'
+      elsif logged_in_driver?
+        redirect_to current_driver, alert: 'Access Denied! You logged in'
       end
     end
 end

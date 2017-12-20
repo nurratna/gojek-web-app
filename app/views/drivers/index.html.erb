@@ -1,30 +1,36 @@
 <h1>Drivers</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Gopay</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @drivers.each do |driver| %>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
       <tr>
-        <td><%= driver.name %></td>
-        <td><%= driver.email %></td>
-        <td><%= driver.phone %></td>
-        <td><%= driver.gopay %></td>
-        <td><%= link_to 'Show', driver %></td>
-        <td><%= link_to 'Edit', edit_driver_path(driver) %></td>
-        <td><%= link_to 'Destroy', driver, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Gopay</th>
+        <th>Location</th>
+        <th>Service type</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @drivers.each do |driver| %>
+        <tr>
+          <td><%= driver.name %></td>
+          <td><%= driver.email %></td>
+          <td><%= driver.phone %></td>
+          <td><%= number_to_currency(driver.gopay, unit: "Rp ", delimiter: ".", separator: ",") %></td>
+          <td><%= driver.location %></td>
+          <td><%= driver.service_type %></td>
+          <td><%= link_to 'Show', driver %></td>
+          <td><%= link_to 'Edit', edit_driver_path(driver) %></td>
+          <td><%= link_to 'Destroy', driver, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <br>
 

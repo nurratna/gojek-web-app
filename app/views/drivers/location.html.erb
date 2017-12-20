@@ -1,38 +1,47 @@
-<%= form_for @driver, :url => { :action => 'current_location' } do |f| %>
-  <% if @driver.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@driver.errors.count, "error") %> prohibited this user from being saved</h2>
-
-      <ul>
-      <% @driver.errors.full_messages.each do |message| %>
-        <li class="text-danger"><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
 <h1>Change Location</h1>
-<div>
-  <strong>Name:</strong>
-  <%= @driver.name %>
-</div>
-<div>
-  <strong>Location:</strong>
-  <%= @driver.location %>
-</div>
-  <fieldset>
-    <legend></legend>
-    <div class="field">
-      <%= text_field_tag :location, params[:location] %>
-    </div>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <td><%= @driver.name %></td>
+      </tr>
+      <tr>
+        <th>Location</th>
+        <td><%= @driver.location %></td>
+      </tr>
+      <tr>
+        <th></th>
+        <td>
+          <div style="width: 50%">
+            <%= form_for @driver, :url => { :action => 'current_location' } do |f| %>
+              <% if @driver.errors.any? %>
+                <div id="error_explanation">
+                  <h2><%= pluralize(@driver.errors.count, "error") %> prohibited this user from being saved</h2>
 
-    <div class="field">
-      <%= f.hidden_field :location %>
-    </div>
+                  <ul>
+                  <% @driver.errors.full_messages.each do |message| %>
+                    <li class="text-danger"><%= message %></li>
+                  <% end %>
+                  </ul>
+                </div>
+              <% end %>
 
-    <div class="actions">
-      <%= f.submit "Update" %>
-    </div>
-  </fieldset>
-<% end %>
+              <div class="field">
+                <%= text_field_tag :location, params[:location] %>
+              </div>
 
-<%= link_to 'Back', drivers_path %>
+              <div class="field">
+                <%= f.hidden_field :location %>
+              </div>
+
+              <div class="actions">
+                <%= f.submit "Update" %>
+              </div>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    </thead>
+  </table>
+ </div>
