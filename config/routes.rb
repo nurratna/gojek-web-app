@@ -33,6 +33,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api, defaults: { format: :json }, except: :destroy do
+    namespace :v1 do
+      resources :drivers
+    end
+  end
+
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :orders

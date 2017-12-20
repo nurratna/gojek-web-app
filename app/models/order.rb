@@ -33,11 +33,11 @@ class Order < ApplicationRecord
   validates :destination, presence: true
   validate :ensure_destination_latlong_found
   validates :service_type, :payment_type, presence: true
-  validates :service_type, inclusion: service_types.keys
   validates :payment_type, inclusion: payment_types.keys
 
   validate :ensure_origin_different_with_destination
   validate :ensure_credit_sufficient_if_using_gopay
+  validates :service_type, inclusion: service_types.keys
   validate :distance_must_be_less_than_or_equal_to_max_dist_origin_destination
 
   after_validation :set_attributes

@@ -22,7 +22,7 @@ class Driver < ApplicationRecord
 
   validate :geocode_or_reset_coordinates
   validate :ensure_location_latlong_found
-  before_save :set_location
+  after_validation :set_location
 
   def topup(amount)
     if !(is_numeric?(amount))
