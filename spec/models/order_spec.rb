@@ -75,7 +75,7 @@ RSpec.describe Order, type: :model do
     it 'is invalid if distance > 25 km from origin' do
       order = build(:order, destination: 'Aceh')
       order.valid?
-      expect(order.errors[:address]).to include("must not be more than 25 km away from origin")
+      expect(order.errors[:address]).to include("must not be more than 50 km away from origin")
     end
   end
 
@@ -96,17 +96,25 @@ RSpec.describe Order, type: :model do
     context "with sufficient gopay credit" do
       before :each do
         @user = create(:user, gopay: 150000)
-        @order = build(:order, payment_type: 'Go Pay')
-        @order.user = @user
       end
 
       it 'is valid with sufficient gopay credit' do
-        expect(@order).to be_valid
+        order = build(:order, payment_type: 'Go Pay')
+        order.user = @user
+        expect(order).to be_valid
       end
 
-      it 'substracts user gopay credit with est_price' do
-        @order.save
-        expect(@user.gopay).to eq(150000 - @order.est_price)
+      # it 'substracts user gopay credit with est_price if state is completed' do
+      #   order = build(:order, payment_type: 'Go Pay', status: "Completed")
+      #   order.calculate_est_price
+      #   order.save
+      #   expect(@user.gopay).to eq(150000 - order.calculate_est_price)
+      # end
+
+      it 'unsubstracts user gopay credit with est_price if state is cancel' do
+        order = build(:order, payment_type: 'Go Pay', status: "Cancel")
+        order.save
+        expect(@user.gopay).to eq(150000)
       end
     end
 
@@ -132,8 +140,10 @@ RSpec.describe Order, type: :model do
   describe 'create order' do
     context 'driver found' do
       before :each do
-        driver = create(:driver, location: 'sarinah', service_type: 'Go Ride')
-        @order = create(:order, origin: 'sarinah', destination: 'tanah abang', service_type: 'Go Ride', driver: driver)
+        @driver = create(:driver, location: 'sarinah', service_type: 'Go Ride', gopay: 10000)
+        @order = build(:order, origin: 'sarinah', destination: 'tanah abang', service_type: 'Go Ride', driver: @driver, status: 'Completed')
+        @order.driver = @driver
+        @order.est_price = @order.calculate_est_price
         @order.set_drivers
       end
 
@@ -144,6 +154,14 @@ RSpec.describe Order, type: :model do
       it "saves driver_id in order model" do
         expect(@order.driver_id).not_to eq(nil)
       end
+
+      # it "changes location driver to destination" do
+      #   expect(@order.driver.location).to eq("tanah abang")
+      # end
+      #
+      # it "adds driver's gopay balance" do
+      #   expect(@order.driver.gopay).to eq(10000 + @order.est_price)
+      # end
     end
 
     context 'driver not found' do

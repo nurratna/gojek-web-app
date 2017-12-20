@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_action :authorized_user, except: [:new, :create]
+  before_action :authorize_login, except: [:new, :create]
+  before_action :authorized_logout, only: [:index, :new, :create]
   before_action :authorized_current_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup, :order]
-  before_action :authorized_current_user_permission, only: [:index, :new, :create]
   before_action :set_user, only: [:show, :edit, :update, :destroy, :topup, :save_topup]
 
   # GET /users
@@ -28,8 +28,6 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        @user.token
-        @user.regenerate_token
         login_user @user
         format.html { redirect_to @user, notice: "Welcome #{@user.name.upcase}. Your account was successfully created."}
         format.json { render :show, status: :created, location: @user }
@@ -94,21 +92,21 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :phone, :password, :passsword_confirmation)
     end
 
-    def authorized_user
-      if !User.find_by(id: session[:user_id])
+    def authorize_login
+      if !User.find_by(id: current_user)
         redirect_to login_url, alert: 'Access Denied! Please Login'
+      end
+    end
+
+    def authorize_logout
+      if logged_in_user?
+        redirect_to current_user, alert: "Access Denied! You don't have permission"
       end
     end
 
     def authorized_current_user
       @user = User.find(params[:id])
       if @user != current_user
-        redirect_to current_user, alert: "Access Denied! You don't have permission"
-      end
-    end
-
-    def authorized_current_user_permission
-      if !session[:user_id].nil?
         redirect_to current_user, alert: "Access Denied! You don't have permission"
       end
     end

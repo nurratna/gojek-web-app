@@ -1,6 +1,6 @@
 class DriversController < ApplicationController
-  before_action :authorized_driver, except: [:new, :create]
-  before_action :authorized_current_driver_permission, only: [:index, :new, :create]
+  before_action :authorize_login, except: [:new, :create]
+  before_action :authorize_logout, only: [:index, :new, :create]
   before_action :authorized_current_driver, only: [:show, :edit, :update, :destroy, :gopay, :location, :current_location, :job]
   before_action :set_driver, only: [:show, :edit, :update, :destroy, :gopay, :location, :current_location]
 
@@ -30,8 +30,6 @@ class DriversController < ApplicationController
     @driver = Driver.new(driver_params)
     respond_to do |format|
       if @driver.save
-        @driver.token
-        @driver.regenerate_token
         login_driver @driver
         format.html { redirect_to @driver, notice: "Welcome #{@driver.name.upcase}. Your account was successfully created" }
         format.json { render :show, status: :created, location: @driver }
@@ -57,36 +55,9 @@ class DriversController < ApplicationController
     end
   end
 
-  # DELETE /drivers/1
-  # DELETE /drivers/1.json
-  # def destroy
-  #   @driver.destroy
-  #   respond_to do |format|
-  #     format.html { redirect_to drivers_url, notice: 'Driver was successfully destroyed.' }
-  #     format.json { head :no_content }
-  #   end
-  # end
-
   # GET /driver/1/gopay
   def gopay
   end
-
-  # # GET /driver/1/topup
-  # def topup
-  # end
-  #
-  # # PATCH /drivers/1/topup
-  # def save_topup
-  #   respond_to do |format|
-  #     if @driver.topup(params[:topup_gopay])
-  #       format.html { redirect_to @driver, notice: "Go Pay was successfully updated" }
-  #       format.json { render :show, status: :ok, location: @driver }
-  #     else
-  #       format.html { render :topup }
-  #       format.json { render json: @driver.errors, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
 
   # GET /driver/1/location
   def location
@@ -108,8 +79,6 @@ class DriversController < ApplicationController
   # GET /users/1/order
   def job
     @orders = Order.where(driver_id: current_driver)
-    # status = 1 # Completed
-    # @orders = Order.where("user_id = ? AND service_type = ?", current_user, status)
   end
 
 
@@ -124,21 +93,21 @@ class DriversController < ApplicationController
       params.require(:driver).permit(:name, :email, :phone, :location, :service_type, :password, :password_confirmation)
     end
 
-    def authorized_driver
-      if !Driver.find_by(id: session[:driver_id])
+    def authorize_login
+      if !Driver.find_by(id: current_driver)
         redirect_to login_url, alert: 'Access Denied! Please Login'
+      end
+    end
+
+    def authorize_logout
+      if logged_in_driver?
+        redirect_to current_driver, alert: "Access Denied! You don't have permission"
       end
     end
 
     def authorized_current_driver
       driver = Driver.find(params[:id])
       if driver != current_driver
-        redirect_to current_driver, alert: "Access Denied! You don't have permission"
-      end
-    end
-
-    def authorized_current_driver_permission
-      if !session[:driver_id].nil?
         redirect_to current_driver, alert: "Access Denied! You don't have permission"
       end
     end

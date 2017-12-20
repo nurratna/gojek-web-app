@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_action :authorized_user
+  before_action :dont_accses, only: [:index, :destroy]
+  before_action :authorize_user_login
   before_action :set_order, only: [:show, :destroy]
 
   def index
@@ -12,9 +13,6 @@ class OrdersController < ApplicationController
   def new
     @order = Order.new
   end
-
-  # def edit
-  # end
 
   def create
     @order = Order.new(order_params)
@@ -37,9 +35,6 @@ class OrdersController < ApplicationController
     end
   end
 
-  # def update
-  # end
-
   def destroy
     @order.destroy
     respond_to do |format|
@@ -57,9 +52,16 @@ class OrdersController < ApplicationController
       params.require(:order).permit(:origin, :destination, :service_type, :payment_type)
     end
 
-    def authorized_user
-      if !User.find_by(id: session[:user_id])
-        redirect_to login_url, alert: 'Access Denied! Please Login'
+    def dont_accses
+      if logged_in_user? || logged_in_driver? || logout_driver || logout_driver
+        redirect_to home_index_path, alert: 'Access Denied! You dont have permission.'
       end
     end
+
+    def authorize_user_login
+      if !User.find_by(id: current_user)
+        redirect_to login_url, alert: 'Access Denied! Please Login.'
+      end
+    end
+
 end

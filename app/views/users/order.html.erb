@@ -22,7 +22,6 @@
         <td><%= order.payment_type %></td>
         <td><%= order.driver_id %></td>
         <td><%= number_to_currency(order.est_price, unit: "Rp ", delimiter: ".", separator: ",") %></td>
-        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </table>

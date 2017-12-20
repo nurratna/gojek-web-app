@@ -2,7 +2,6 @@ class Driver < ApplicationRecord
   has_secure_password
   has_secure_token
   has_many :orders
-  # belongs_to :goride, :class_name => 'Location::Goride', :foreign_key => :location_goride_id
 
   geocoded_by :location
   before_validation :geocode, if: ->(obj){ obj.location.present? and obj.location_changed? }
@@ -23,8 +22,7 @@ class Driver < ApplicationRecord
 
   validate :geocode_or_reset_coordinates
   validate :ensure_location_latlong_found
-
-  before_validation :set_location
+  before_save :set_location
 
   def topup(amount)
     if !(is_numeric?(amount))
@@ -62,6 +60,8 @@ class Driver < ApplicationRecord
     end
 
     def set_location
+      # manggil api location
+      # kirim address, latitude, longitude, driver_id
       # location = Location::Goride.find_by(address: :location)
       if self.service_type == "Go Ride"
         obj = Location::Goride.find_or_create_by(address: self.location)
@@ -74,6 +74,11 @@ class Driver < ApplicationRecord
         obj = Location::Gocar.find_or_create_by(address: self.location)
         self.location_gocar_id = obj.id
         obj.driver_ids << self.id
+        obj.latitude = self.latitude
+        obj.longitude = self.longitude
+        obj.driver_ids << self.id
+        obj.save
+        self.location_gorcar_id = obj.id
       end
     end
 end

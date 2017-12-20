@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :location_gocar, :class => 'Location::Gocar' do
-    address "MyString"
+    address "Jakarta"
   end
 
   factory :invalid_location_gocar, parent: :location_gocar do

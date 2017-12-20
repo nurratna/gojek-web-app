@@ -58,7 +58,7 @@ class Order < ApplicationRecord
   end
 
   def max_dist_origin_driver
-    1
+    3
   end
 
   def calculate_distance_origin_destination
@@ -118,7 +118,7 @@ class Order < ApplicationRecord
           break;
         else
           self.status = 1 # Completed
-          self.driver_id = driver[:ids].shuffle.first
+          self.driver_id = driver[:ids].shuffle!.first
 
           break;
         end

@@ -161,3 +161,38 @@ footer {
     }
   }
 }
+
+/* forms */
+.actions input{
+  margin-top: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  &:hover {
+    background: #8BC93B;
+    font-style: bold;
+  }
+}
+
+.actions button{
+  margin-top: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  &:hover {
+    background: #8BC93B;
+    font-style: bold;
+  }
+}
+
+.field input, textarea, select{
+  padding: 3px;
+}
+
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 3px;
+}
+
+input {
+  height: auto !important;
+}
