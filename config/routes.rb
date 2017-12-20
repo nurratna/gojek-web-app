@@ -5,8 +5,6 @@ Rails.application.routes.draw do
   resources :drivers, except: :destroy  do
     member do
       get 'gopay'
-      # get 'topup'
-      # patch 'topup' => :save_topup
       get 'location'
       patch 'location' => :current_location
       get 'job'
@@ -28,5 +26,29 @@ Rails.application.routes.draw do
   end
 
   resources :orders, only: [:index, :show, :new, :create]
+
+  namespace :api, defaults: { format: :json }, except: :destroy do
+    namespace :v1 do
+      resources :users
+    end
+  end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :orders
+    end
+  end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :location_gorides
+    end
+  end
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :location_gocars
+    end
+  end
 
 end
