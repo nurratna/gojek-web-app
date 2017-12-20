@@ -43,7 +43,7 @@ class Order < ApplicationRecord
   after_validation :set_attributes
   after_validation :find_driver
   after_validation :topup_balance_driver_and_changes_location
-  before_save :substracts_credit_if_using_gopay_and_state_completed
+  after_validation :substracts_credit_if_using_gopay_and_state_completed
 
   def cost_goride_per_km
     3500
