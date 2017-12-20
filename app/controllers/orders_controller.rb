@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :dont_accses, only: [:index, :destroy]
+  before_action :dont_accses, only: [:destroy]
   before_action :authorize_user_login
   before_action :set_order, only: [:show, :destroy]
 

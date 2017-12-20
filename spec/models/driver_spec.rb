@@ -156,7 +156,7 @@ RSpec.describe Driver, type: :model do
     it 'is invalid if lat-long not found' do
       driver = build(:driver, location: "asdfxacxc")
       driver.valid?
-      expect(driver.errors[:location]).to include("not found")
+      expect(driver.errors[:location]).to include("not found. Please check your connection or typo")
     end
   end
 
@@ -188,7 +188,7 @@ RSpec.describe Driver, type: :model do
 
     context 'with service type is Go Car' do
       it "save driver_id to Location::Gocar model" do
-        driver = create(:driver,  service_type: "Go Car")
+        driver = create(:driver, service_type: "Go Car")
         expect(driver.location_gocar_id).not_to eq(nil)
       end
     end

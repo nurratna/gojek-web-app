@@ -15,10 +15,13 @@
         <%= password_field_tag :password, params[:password] %>
         </div>
 
-        <div style="float:left">
+        <div class="field">
           <%= label_tag :role, 'Role:' %>
-          <%= radio_button_tag :role, 'user' %>User
-          <%= radio_button_tag :role, 'driver' %> Driver
+          <table>
+            <td><%= radio_button_tag :role, 'user' %>User</td>
+            <td></td>
+            <td><%= radio_button_tag :role, 'driver' %>Driver</td>
+          </table>
         </div>
 
         <div class="actions">

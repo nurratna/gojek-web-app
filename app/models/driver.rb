@@ -47,7 +47,7 @@ class Driver < ApplicationRecord
 
     def ensure_location_latlong_found
       if latitude.nil? || longitude.nil?
-        errors.add(:location, "not found")
+        errors.add(:location, "not found. Please check your connection or typo")
         false
       end
     end
@@ -76,7 +76,7 @@ class Driver < ApplicationRecord
         obj.longitude = self.longitude
         obj.driver_ids << self.id
         obj.save
-        self.location_gorcar_id = obj.id
+        self.location_gocar_id = obj.id
       end
     end
 end
